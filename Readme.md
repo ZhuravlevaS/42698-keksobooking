@@ -1,8 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Светлана Журавлева](https://up.htmlacademy.ru/javascript/11/user/42698).
-* Наставник: `Олег Петров`
-(https://htmlacademy.ru/profile/fyvfyv).
+* Наставник: [Олег Петров](https://htmlacademy.ru/profile/fyvfyv).
 
 ---
 
