@@ -11,7 +11,9 @@ var MIN_Y = 100;
 var MAX_Y = 500;
 
 var similarListElement = document.querySelector('.map');
-var similarNoticeButton = document.querySelector('template');
+
+var similarListButtons = document.querySelector('.map__pins');
+var similarNoticeButton = document.querySelector('template').content.querySelector('.map__pin');
 var noticeQuantity = 8;
 
 var avatars = ["01", "02", "03", "04", "05", "06", "07", "08"];
@@ -25,18 +27,26 @@ var photos = [];
 var notices = [];
 
 
-function getRandomInt (min, max) {
-	var RandomInt = Math.floor(Math.random() * (max - min + 1)) + min;
-	var SimilarInt = indexOf(RandomInt);
-	if (SimilarInt === -1) {
-		return true;
-	} else {
-		return false;
-	}
+var randomInteger = function(min, max) {
+  var rand = min - 0.5 + Math.random() * (max - min + 1)
+  rand = Math.round(rand);
+  return rand;
+}
+
+function getRandomItem (arr) { 
+  var newArr =[];
+	var copyArr = arr.slice();
+	while (copyArr.length > 0) {
+    var RandomItem = randomInteger(0, copyArr.length - 1);
+    var current = copyArr.splice(RandomItem, 1)[0];
+    newArr.push(current);    
+  }
+  return newArr;
 }
 
 function getRandomNum (min, max) {
-	var RandomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+  var randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+  return randomNum;
 }
 
 var GetRandomPrice = function() {
@@ -64,47 +74,62 @@ var GetLocationY = function () {
 	return RandomY;
 }
 
-var NoticeParam = {
-	"author": {
-		"avatar": 'img/avatars/user' + avatars[getRandomNum(0,7)] + '.png'
-	},
+var getNotice = function () {
+    var avatarArr = getRandomItem(avatars);
+    var titleArr = getRandomItem(titles); 
+    
+  for (var i = 0; i < noticeQuantity; i++) {    
+    var locationX = GetLocationX();
+    var locationY = GetLocationY();
 
-	"offer": {
-		"title": titles[getRandomNum(0, titles.length)],
-		"address": "",
-		"price": GetRandomPrice(),
-		"type": location.x + ', ' + location.y,
-		"rooms": GetRandomRooms(),
-		"guests": GetRandomGuests(),
-		"checkin": checkinsTime[getRandomNum(0, checkinsTime.length)],
-		"checkout": checkoutsTime[getRandomNum(0, checkoutsTime.length)],
-		"features": featuresOfApart[getRandomNum(0, featuresOfApart.length)],
-		"description": "",
-		"photos": photos
-	},
-
-	"location": {
-		"x": GetLocationX(),
-		"y": GetLocationY()
-	}
+    var notice = {
+      author: {
+	      avatar:'img/avatars/user' + avatarArr[i] + '.png'
+	    },
+      offer: {
+        title: titleArr[i],
+        address: locationX + ', ' + locationY,
+        price: GetRandomPrice(),
+        type: typesOfApart[getRandomNum(0, typesOfApart.length - 1)],
+        rooms: GetRandomRooms(),
+        guests: GetRandomGuests(),
+        checkin: checkinsTime[getRandomNum(0, checkinsTime.length - 1)],
+        checkout: checkoutsTime[getRandomNum(0, checkoutsTime.length - 1)],
+        features: getRandomItem(featuresOfApart).slice(0, getRandomNum(0, featuresOfApart.length - 1)),
+        description: '',
+        photos: photos
+      },
+      location: {
+        x: locationX,
+        y: locationY
+      }
+    }
+    notices.push(notice);
+  }   
 }
+getNotice();	
 
 var renderNotice = function (notice) {
 	var noticeElement = similarNoticeButton.cloneNode(true);
-	noticeElement.querySelector('.map__pin img').textContent = NoticeParam.author.avatar;
-	noticeElement.querySelector('.map__pin').style.left = NoticeParam.location.x;
-	noticeElement.querySelector('.map__pin').style.top = NoticeParam.location.y;
+  noticeElement.querySelector('.map__pin img').removeAttribute('src');
+  noticeElement.querySelector('.map__pin img').setAttribute('src', notice.author.avatar);
+  noticeElement.style.left = 'notice.location.x';
+  noticeElement.style.left = notice.location.x + 'px';
+  noticeElement.style.top = '';
+	noticeElement.style.top = notice.location.y + 'px';
 
 	return noticeElement;
 };
 
-var drawNotice = function () {
-	fragment.appendChild(renderNotice(notices[i]));
-};
+var prepareHtml = notices.map(function (notice) {
+  return renderNotice(notice);
+});
+
 
 var fragment = document.createDocumentFragment();
-for (var i = 0; i < noticeQuantity; i++) {
-	drawNotice ();
+for (var l = 0; l < notices.length; l++) {
+  fragment.appendChild(renderNotice(notices[l]));
 }
+similarListButtons.appendChild(fragment);
 
 document.querySelector('.map').classList.remove('map--faded');
