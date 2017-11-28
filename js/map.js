@@ -10,12 +10,10 @@ var MAX_X = 900;
 var MIN_Y = 100;
 var MAX_Y = 500;
 
-var elementHtml = document.querySelector('.map__filters-container');
-// var similarListCard = document.querySelector('.map');
-var similarNoticeCard = document.querySelector('template').content.querySelector('article.map__card');
-
+var mapElemnt = document.querySelector('.map');
 var similarListButtons = document.querySelector('.map__pins');
 var similarNoticeButton = document.querySelector('template').content.querySelector('.map__pin');
+var similarNoticeCard = document.querySelector('template').content.querySelector('article.map__card');
 var noticeQuantity = 8;
 
 var avatars = ['01', '02', '03', '04', '05', '06', '07', '08'];
@@ -109,12 +107,18 @@ var renderNoticeCard = function (notice) {
   noticeElementCard.querySelector('h4 + p + p').textContent = 'Заезд после ' + notice.offer.checkin + ', выезд до ' + notice.offer.checkout;
   noticeElementCard.querySelector('.popup__avatar').removeAttribute('src');
   noticeElementCard.querySelector('.popup__avatar').setAttribute('src', notice.author.avatar);
-  // noticeElementCard.querySelector('.popup__features').removeChild('li');
 
-  // notice.offer.features.forEach( function (featureItem) {
-  //   noticeElementCard.querySelector('.popup__features').appendChild('li').classList.add('feature feature--' + featureItem);
-  // });
+  var popupFeature = noticeElementCard.querySelector('.popup__features');
 
+  while (popupFeature.firstChild) {
+    popupFeature.removeChild(popupFeature.firstChild);
+  }
+
+  notice.offer.features.forEach(function (featureItem) {
+    var li = document.createElement('li');
+    popupFeature.appendChild(li).classList.add('feature');
+    popupFeature.appendChild(li).classList.add('feature--' + featureItem);
+  });
 
   return noticeElementCard;
 };
@@ -128,6 +132,6 @@ for (var l = 0; l < notices.length; l++) {
 }
 
 similarListButtons.appendChild(fragment);
-elementHtml.insertAdjacentHTML('beforebegin', fragmentCard);
+mapElemnt.appendChild(fragmentCard);
 
 document.querySelector('.map').classList.remove('map--faded');
