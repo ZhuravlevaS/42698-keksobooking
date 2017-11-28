@@ -11,7 +11,7 @@ var MIN_Y = 100;
 var MAX_Y = 500;
 
 var elementHtml = document.querySelector('.map__filters-container');
-var similarListCard = document.querySelector('.map').insertAdjacentHTML('beforebegin', elementHtml);
+// var similarListCard = document.querySelector('.map');
 var similarNoticeCard = document.querySelector('template').content.querySelector('article.map__card');
 
 var similarListButtons = document.querySelector('.map__pins');
@@ -110,11 +110,11 @@ var renderNoticeCard = function (notice) {
   noticeElementCard.querySelector('.popup__avatar').removeAttribute('src');
   noticeElementCard.querySelector('.popup__avatar').setAttribute('src', notice.author.avatar);
   // noticeElementCard.querySelector('.popup__features').removeChild('li');
- 
+
   // notice.offer.features.forEach( function (featureItem) {
   //   noticeElementCard.querySelector('.popup__features').appendChild('li').classList.add('feature feature--' + featureItem);
   // });
- 
+
 
   return noticeElementCard;
 };
@@ -128,6 +128,6 @@ for (var l = 0; l < notices.length; l++) {
 }
 
 similarListButtons.appendChild(fragment);
-similarListCard.appendChild(fragmentCard);
+elementHtml.insertAdjacentHTML('beforebegin', fragmentCard);
 
 document.querySelector('.map').classList.remove('map--faded');
