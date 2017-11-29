@@ -62,8 +62,45 @@ var getRandomItem = function (arr) {
   return newArr;
 };
 
+// var getRandomArr = function (array) {
+//   var lengthArr = getRandomNum(0, array.length);
+//   var randomArr = [];
+
+//   for (var i = 0; i < lengthArr; i++) {
+//     var copyArray = array.slice();
+//     var currentRandomIndex = getRandomNum(0, array.length - 1);
+//     var currentItem = array.splice(currentRandomIndex, 1)[0];
+
+//     randomArr.push(currentItem);
+//   }
+//   return randomArr;
+// };
+
+var getRandomArr = function (arr) {
+  var lengthArr = getRandomNum(0, arr.length-1);
+  var randomArr = [];
+  
+  var getUniaqItem = function() {    
+    var randimIndex = getRandomNum(0, arr.length);
+    var randomItem = arr[randimIndex];
+    if (randomArr.some(function(item) {
+      return randomItem === item;
+    })) {
+      // если есть, то вызываем функцию заново
+      return getUniaqItem();
+    }
+    // если нет — возвращаем уникальное значение типа комнаты
+    return randomItem;    
+  }
+
+  for (var i = 0; i < lengthArr; i++) {
+    randomArr.push(getUniaqItem());
+  }
+  
+  return randomArr;
+}
+
 var getNotice = function () {
-  var avatarArr = getRandomItem(avatars);
   var titleArr = getRandomItem(titles);
 
   for (var i = 0; i < NOTICE_QUENTITY; i++) {
@@ -72,7 +109,7 @@ var getNotice = function () {
 
     var notice = {
       author: {
-        avatar: 'img/avatars/user' + avatarArr[i] + '.png'
+        avatar: 'img/avatars/user' + avatars[i] + '.png'
       },
       offer: {
         title: titleArr[i],
@@ -83,7 +120,7 @@ var getNotice = function () {
         guests: getRandomNum(MIN_GUESTS, MAX_GUESTS),
         checkin: TIMES[getRandomNum(0, TIMES.length - 1)],
         checkout: TIMES[getRandomNum(0, TIMES.length - 1)],
-        features: getRandomItem(featuresOfApart).slice(0, getRandomNum(0, featuresOfApart.length - 1)),
+        features: getRandomArr(featuresOfApart),
         description: '',
         photos: photos
       },
@@ -135,9 +172,19 @@ var renderNoticeCard = function (notice) {
 var fragment = document.createDocumentFragment();
 var fragmentCard = document.createDocumentFragment();
 
+var drawPin = function (i) {
+  var pinItem = fragment.appendChild(renderNoticeBtn(notices[i]));
+  return pinItem;
+};
+
+var drawCard = function (i) {
+  var cardItem = fragmentCard.appendChild(renderNoticeCard(notices[i]));
+  return cardItem; 
+}
+
 for (var l = 0; l < notices.length; l++) {
-  fragment.appendChild(renderNoticeBtn(notices[l]));
-  fragmentCard.appendChild(renderNoticeCard(notices[l]));
+  drawPin(l);
+  drawCard(l);
 }
 
 similarListButtons.appendChild(fragment);
