@@ -28,20 +28,8 @@ var similarListButtons = document.querySelector('.map__pins');
 var similarNoticeButton = document.querySelector('template').content.querySelector('.map__pin');
 var similarNoticeCard = document.querySelector('template').content.querySelector('article.map__card');
 
-// var cleanFeatureList = function () {
-//   var popupFeatureList = document.querySelector('template').content.querySelector('.popup__features');
-//   while (popupFeatureList.firstChild) {
-//     popupFeatureList.removeChild(popupFeatureList.firstChild);
-//   }
-// };
-
-// cleanFeatureList();
-
 var renderAvatar = function (i) {
-  if (i <= 9) {
-    var avatar = '0' + i;
-  }
-  return avatar;
+  return i <= 9 ? '0' + i : i;
 };
 
 var getRandomNum = function (min, max) {
@@ -110,9 +98,9 @@ var getNotice = function (i) {
   return notice;
 };
 
-var getNoticesArr = function () {
+var getNoticesArr = function (length) {
   var notices = [];
-  for (var i = 0; i < NOTICE_QUANTITY; i++) {
+  for (var i = 0; i < length; i++) {
     notices.push(getNotice(i));
   }
   return notices;
@@ -138,16 +126,12 @@ var renderNoticeCard = function (notice) {
   noticeElementCard.querySelector('h4 + p + p').textContent = 'Заезд после ' + notice.offer.checkin + ', выезд до ' + notice.offer.checkout;
   noticeElementCard.querySelector('.popup__avatar').setAttribute('src', notice.author.avatar);
 
-  var popupFeature = document.querySelector('template').content.querySelector('.popup__features');
-  var popupFeatureElement = document.querySelector('template').content.querySelector('.popup__features li');
+  var popupFeature = noticeElementCard.querySelector('.popup__features');
 
   var renderFeature = function () {
-    notice.offer.features.forEach(function (featureItem, i) {
-      var featureClass = popupFeatureElement.classList.contains('feature--' + featureItem[i]);
-
-      if (!featureClass) {
-        popupFeature.removeChild(featureClass);
-      }
+    notice.offer.features.forEach(function (featureItem) {
+      var li = document.createElement('li');
+      popupFeature.appendChild(li).classList.add('feature', 'feature--' + featureItem);
     });
   };
   renderFeature();
@@ -159,13 +143,13 @@ var fragment = document.createDocumentFragment();
 var fragmentCard = document.createDocumentFragment();
 
 var drawCard = function (i) {
-  var cardItem = fragmentCard.appendChild(renderNoticeCard(getNoticesArr()[i]));
+  var cardItem = fragmentCard.appendChild(renderNoticeCard(getNoticesArr(NOTICE_QUANTITY)[i]));
   return cardItem;
 }; drawCard(getRandomNum(0, NOTICE_QUANTITY - 1));
 
 for (var l = 0; l < NOTICE_QUANTITY; l++) {
   var drawPin = function (i) {
-    var pinFragment = fragment.appendChild(renderNoticeBtn(getNoticesArr()[i]));
+    var pinFragment = fragment.appendChild(renderNoticeBtn(getNoticesArr(NOTICE_QUANTITY)[i]));
     return pinFragment;
   };
   drawPin(l);
