@@ -1,15 +1,26 @@
 'use strict';
-var MIN_PRICE = 1000;
-var MAX_PRICE = 1000000;
-var MIN_ROOMS = 1;
-var MAX_ROOMS = 5;
-var MIN_GUESTS = 1;
-var MAX_GUESTS = 10;
-var MIN_X = 300;
-var MAX_X = 900;
-var MIN_Y = 100;
-var MAX_Y = 500;
-var NOTICE_QUENTITY = 8;
+
+var CardParam = {
+  MIN_PRICE: 1000,
+  MAX_PRICE: 1000000,
+  MIN_ROOMS: 1,
+  MAX_ROOMS: 5,
+  MIN_GUESTS: 1,
+  MAX_GUESTS: 10,
+  TITLES: ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'],
+  TYPES_OF_APART: ['flat', 'house', 'bungalo'],
+  TIMES: ['12:00', '13:00', '14:00'],
+  FEATURES_OF_APART: ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner']
+};
+
+var PinParams = {
+  MIN_X: 300,
+  MAX_X: 900,
+  MIN_Y: 100,
+  MAX_Y: 500
+};
+
+var NOTICE_QUANTITY = 8;
 
 var mapElemnt = document.querySelector('.map');
 var mapFilter = mapElemnt.querySelector('.map__filters-container');
@@ -17,122 +28,95 @@ var similarListButtons = document.querySelector('.map__pins');
 var similarNoticeButton = document.querySelector('template').content.querySelector('.map__pin');
 var similarNoticeCard = document.querySelector('template').content.querySelector('article.map__card');
 
-var avatars = [];
-var titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-var typesOfApart = ['flat', 'house', 'bungalo'];
-var TIMES = ['12:00', '13:00', '14:00'];
-var featuresOfApart = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-var photos = [];
-var notices = [];
+// var cleanFeatureList = function () {
+//   var popupFeatureList = document.querySelector('template').content.querySelector('.popup__features');
+//   while (popupFeatureList.firstChild) {
+//     popupFeatureList.removeChild(popupFeatureList.firstChild);
+//   }
+// };
 
-var cleanFeatureList = function () {
-  var popupFeatureList = document.querySelector('template').content.querySelector('.popup__features');
-  while (popupFeatureList.firstChild) {
-    popupFeatureList.removeChild(popupFeatureList.firstChild);
+// cleanFeatureList();
+
+var renderAvatar = function (i) {
+  if (i <= 9) {
+    var avatar = '0' + i;
   }
+  return avatar;
 };
-
-cleanFeatureList();
-
-var renderAvatar = function () {
-  for (var i = 1; i <= NOTICE_QUENTITY; i++) {
-    if (i > 9) {
-      avatars.push(i);
-    } else {
-      avatars.push('0' + i);
-    }
-  }
-};
-
-renderAvatar();
 
 var getRandomNum = function (min, max) {
   var randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
   return randomNum;
 };
 
-var getRandomItem = function (arr) {
+var shuffleArray = function (arr) {
   var newArr = [];
   var copyArr = arr.slice();
   while (copyArr.length > 0) {
-    var RandomItem = getRandomNum(0, copyArr.length - 1);
-    var current = copyArr.splice(RandomItem, 1)[0];
+    var RandomArray = getRandomNum(0, copyArr.length - 1);
+    var current = copyArr.splice(RandomArray, 1)[0];
     newArr.push(current);
   }
   return newArr;
 };
 
-// var getRandomArr = function (array) {
-//   var lengthArr = getRandomNum(0, array.length);
-//   var randomArr = [];
-
-//   for (var i = 0; i < lengthArr; i++) {
-//     var copyArray = array.slice();
-//     var currentRandomIndex = getRandomNum(0, array.length - 1);
-//     var currentItem = array.splice(currentRandomIndex, 1)[0];
-
-//     randomArr.push(currentItem);
-//   }
-//   return randomArr;
-// };
-
-var getRandomArr = function (arr) {
-  var lengthArr = getRandomNum(0, arr.length-1);
-  var randomArr = [];
-  
-  var getUniaqItem = function() {    
-    var randimIndex = getRandomNum(0, arr.length);
-    var randomItem = arr[randimIndex];
-    if (randomArr.some(function(item) {
-      return randomItem === item;
-    })) {
-      // если есть, то вызываем функцию заново
-      return getUniaqItem();
-    }
-    // если нет — возвращаем уникальное значение типа комнаты
-    return randomItem;    
-  }
-
-  for (var i = 0; i < lengthArr; i++) {
-    randomArr.push(getUniaqItem());
-  }
-  
-  return randomArr;
-}
-
-var getNotice = function () {
-  var titleArr = getRandomItem(titles);
-
-  for (var i = 0; i < NOTICE_QUENTITY; i++) {
-    var locationX = getRandomNum(MIN_X, MAX_X);
-    var locationY = getRandomNum(MIN_Y, MAX_Y);
-
-    var notice = {
-      author: {
-        avatar: 'img/avatars/user' + avatars[i] + '.png'
-      },
-      offer: {
-        title: titleArr[i],
-        address: locationX + ', ' + locationY,
-        price: getRandomNum(MIN_PRICE, MAX_PRICE),
-        type: typesOfApart[getRandomNum(0, typesOfApart.length - 1)],
-        rooms: getRandomNum(MIN_ROOMS, MAX_ROOMS),
-        guests: getRandomNum(MIN_GUESTS, MAX_GUESTS),
-        checkin: TIMES[getRandomNum(0, TIMES.length - 1)],
-        checkout: TIMES[getRandomNum(0, TIMES.length - 1)],
-        features: getRandomArr(featuresOfApart),
-        description: '',
-        photos: photos
-      },
-      location: {
-        x: locationX,
-        y: locationY
-      }
-    };
-    notices.push(notice);
-  }
+var getRandomArrLength = function (arr) {
+  var length = getRandomNum(0, arr.length - 1);
+  return length;
 };
-getNotice();
+
+var getRandomArr = function (array, length) {
+  var randomArray = [];
+
+  while (randomArray.length < length) {
+    var value = array[getRandomNum(0, array.length - 1)];
+    if (randomArray.indexOf(value) !== -1) {
+      continue;
+    } else {
+      randomArray.push(value);
+    }
+  }
+
+  return randomArray;
+};
+
+var getNotice = function (i) {
+  var titleArr = shuffleArray(CardParam.TITLES);
+  var locationX = getRandomNum(PinParams.MIN_X, PinParams.MAX_X);
+  var locationY = getRandomNum(PinParams.MIN_Y, PinParams.MAX_Y);
+
+  var notice = {
+    author: {
+      avatar: 'img/avatars/user' + renderAvatar(i + 1) + '.png'
+    },
+    offer: {
+      title: titleArr[i],
+      address: locationX + ', ' + locationY,
+      price: getRandomNum(CardParam.MIN_PRICE, CardParam.MAX_PRICE),
+      type: CardParam.TYPES_OF_APART[getRandomNum(0, CardParam.TYPES_OF_APART.length - 1)],
+      rooms: getRandomNum(CardParam.MIN_ROOMS, CardParam.MAX_ROOMS),
+      guests: getRandomNum(CardParam.MIN_GUESTS, CardParam.MAX_GUESTS),
+      checkin: CardParam.TIMES[getRandomNum(0, CardParam.TIMES.length - 1)],
+      checkout: CardParam.TIMES[getRandomNum(0, CardParam.TIMES.length - 1)],
+      features: getRandomArr(CardParam.FEATURES_OF_APART, getRandomArrLength(CardParam.FEATURES_OF_APART)),
+      description: '',
+      photos: []
+    },
+    location: {
+      x: locationX,
+      y: locationY
+    }
+  };
+  return notice;
+};
+
+var getNoticesArr = function () {
+  var notices = [];
+  for (var i = 0; i < NOTICE_QUANTITY; i++) {
+    notices.push(getNotice(i));
+  }
+  return notices;
+};
 
 var renderNoticeBtn = function (notice) {
   var noticeElementBtn = similarNoticeButton.cloneNode(true);
@@ -152,16 +136,18 @@ var renderNoticeCard = function (notice) {
   noticeElementCard.querySelector('h4').textContent = notice.offer.type;
   noticeElementCard.querySelector('h4 + p').textContent = notice.offer.rooms + ' комнаты  для ' + notice.offer.guests + ' гостей';
   noticeElementCard.querySelector('h4 + p + p').textContent = 'Заезд после ' + notice.offer.checkin + ', выезд до ' + notice.offer.checkout;
-  noticeElementCard.querySelector('.popup__avatar').removeAttribute('src');
   noticeElementCard.querySelector('.popup__avatar').setAttribute('src', notice.author.avatar);
 
-  var popupFeature = noticeElementCard.querySelector('.popup__features');
+  var popupFeature = document.querySelector('template').content.querySelector('.popup__features');
+  var popupFeatureElement = document.querySelector('template').content.querySelector('.popup__features li');
 
   var renderFeature = function () {
-    notice.offer.features.forEach(function (featureItem) {
-      var li = document.createElement('li');
-      popupFeature.appendChild(li).classList.add('feature');
-      popupFeature.appendChild(li).classList.add('feature--' + featureItem);
+    notice.offer.features.forEach(function (featureItem, i) {
+      var featureClass = popupFeatureElement.classList.contains('feature--' + featureItem[i]);
+
+      if (!featureClass) {
+        popupFeature.removeChild(featureClass);
+      }
     });
   };
   renderFeature();
@@ -172,19 +158,17 @@ var renderNoticeCard = function (notice) {
 var fragment = document.createDocumentFragment();
 var fragmentCard = document.createDocumentFragment();
 
-var drawPin = function (i) {
-  var pinItem = fragment.appendChild(renderNoticeBtn(notices[i]));
-  return pinItem;
-};
-
 var drawCard = function (i) {
-  var cardItem = fragmentCard.appendChild(renderNoticeCard(notices[i]));
-  return cardItem; 
-}
+  var cardItem = fragmentCard.appendChild(renderNoticeCard(getNoticesArr()[i]));
+  return cardItem;
+}; drawCard(getRandomNum(0, NOTICE_QUANTITY - 1));
 
-for (var l = 0; l < notices.length; l++) {
+for (var l = 0; l < NOTICE_QUANTITY; l++) {
+  var drawPin = function (i) {
+    var pinFragment = fragment.appendChild(renderNoticeBtn(getNoticesArr()[i]));
+    return pinFragment;
+  };
   drawPin(l);
-  drawCard(l);
 }
 
 similarListButtons.appendChild(fragment);
