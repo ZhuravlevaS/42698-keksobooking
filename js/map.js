@@ -120,7 +120,7 @@ var renderNoticeCard = function (notice) {
 
   noticeElementCard.querySelector('h3').textContent = notice.offer.title;
   noticeElementCard.querySelector('p small').textContent = notice.offer.address;
-  noticeElementCard.querySelector('.popup__price').textContent = notice.offer.price + '&#x20bd;/ночь';
+  noticeElementCard.querySelector('.popup__price').innerHTML = notice.offer.price + ' &#x20bd;/ночь';
   noticeElementCard.querySelector('h4').textContent = notice.offer.type;
   noticeElementCard.querySelector('h4 + p').textContent = notice.offer.rooms + ' комнаты  для ' + notice.offer.guests + ' гостей';
   noticeElementCard.querySelector('h4 + p + p').textContent = 'Заезд после ' + notice.offer.checkin + ', выезд до ' + notice.offer.checkout;
