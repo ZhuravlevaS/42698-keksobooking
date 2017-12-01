@@ -27,6 +27,7 @@ var mapFilter = mapElemnt.querySelector('.map__filters-container');
 var similarListButtons = document.querySelector('.map__pins');
 var similarNoticeButton = document.querySelector('template').content.querySelector('.map__pin');
 var similarNoticeCard = document.querySelector('template').content.querySelector('article.map__card');
+var btnMain = document.querySelector('.map__pin--main');
 
 var renderAvatar = function (i) {
   return i <= 9 ? '0' + i : i;
@@ -145,17 +146,44 @@ var fragmentCard = document.createDocumentFragment();
 var drawCard = function (i) {
   var cardItem = fragmentCard.appendChild(renderNoticeCard(getNoticesArr(NOTICE_QUANTITY)[i]));
   return cardItem;
-}; drawCard(getRandomNum(0, NOTICE_QUANTITY - 1));
+};
+// drawCard(getRandomNum(0, NOTICE_QUANTITY - 1));
+
 
 for (var l = 0; l < NOTICE_QUANTITY; l++) {
   var drawPin = function (i) {
     var pinFragment = fragment.appendChild(renderNoticeBtn(getNoticesArr(NOTICE_QUANTITY)[i]));
     return pinFragment;
   };
-  drawPin(l);
+  /* var getCurrentCard = function () {
+    drawCard(l).forEach(function (featureItem, index) {
+      return index;
+    });
+  }; */
+  drawPin(l).addEventListener('click', function () {
+    drawCard();
+    mapElemnt.insertBefore(fragmentCard, mapFilter);
+  });
 }
 
-similarListButtons.appendChild(fragment);
-mapElemnt.insertBefore(fragmentCard, mapFilter);
 
-document.querySelector('.map').classList.remove('map--faded');
+btnMain.addEventListener('mouseup', function () {
+  similarListButtons.appendChild(fragment);
+  document.querySelector('.map').classList.remove('map--faded');
+  document.querySelector('.notice__form').classList.remove('notice__form--disabled');
+});
+
+mapElemnt.addEventListener('click', function () {
+  var target = event.target;
+
+  if (target.tagName !== 'img') {
+    target.parentElement.classList.add('pin--active');
+  }
+  if (target.tagName !== 'button') {
+    target.classList.add('pin--active');
+  }
+
+  // mapElemnt.insertBefore(fragmentCard, mapFilter);
+});
+
+
