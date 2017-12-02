@@ -33,6 +33,12 @@ var renderAvatar = function (i) {
   return i <= 9 ? '0' + i : i;
 };
 
+btnMain.addEventListener('mouseup', function () {
+  similarListButtons.appendChild(fragment);
+  document.querySelector('.map').classList.remove('map--faded');
+  document.querySelector('.notice__form').classList.remove('notice__form--disabled');
+});
+
 var getRandomNum = function (min, max) {
   var randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
   return randomNum;
@@ -112,9 +118,27 @@ var renderNoticeBtn = function (notice) {
   noticeElementBtn.querySelector('.map__pin img').setAttribute('src', notice.author.avatar);
   noticeElementBtn.style.left = notice.location.x + 'px';
   noticeElementBtn.style.top = notice.location.y + 'px';
+  noticeElementBtn.addEventListener('click', function (event) { 
+    fragmentCard.appendChild(renderNoticeCard(notice));
+    mapElemnt.insertBefore(fragmentCard, mapFilter);
 
+    var target = event.target;
+    var buttons = mapElemnt.querySelectorAll('.map__pin');
+    // вынести наружу
+    var cleanPins = function() {
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].classList.contains('pin--active') ? buttons[i].classList.remove('pin--active') : null;
+      }
+    }; cleanPins();
+    if (target.tagName === 'IMG') {   
+      target.parentElement.classList.add('pin--active');
+    } else {
+      target.classList.add('pin--active');
+    }
+  });
   return noticeElementBtn;
 };
+
 
 var renderNoticeCard = function (notice) {
   var noticeElementCard = similarNoticeCard.cloneNode(true);
@@ -160,30 +184,33 @@ for (var l = 0; l < NOTICE_QUANTITY; l++) {
       return index;
     });
   }; */
-  drawPin(l).addEventListener('click', function () {
-    drawCard();
-    mapElemnt.insertBefore(fragmentCard, mapFilter);
-  });
+
+  // drawCard(l);
+  drawPin(l)
+  // .addEventListener('click', function () {
+  //   var target = event.target;
+  //   var buttons = mapElemnt.querySelectorAll('.map__pin');
+  //   var cleanPins = function() {
+  //     for (var i = 0; i < buttons.length; i++) {
+  //       buttons[i].classList.contain('pin--active') ? buttons[i].classList.remove('pin--active') : null;
+  //     }
+  //   }; cleanPins();
+  //   if (target.tagName !== 'img' || target.tagName !== 'button') {     
+  //     target.parentElement.classList.add('pin--active');
+  //   }
+  //   if (target.tagName !== 'button') {
+  //     for (var i = 0; i < buttons.length; i++) {
+  //       buttons[i].classList.remove('pin--active');
+  //     }
+  //     target.classList.add('pin--active');
+  //   }
+      
+  //   mapElemnt.insertBefore(fragmentCard, mapFilter);
+  // });
 }
 
 
-btnMain.addEventListener('mouseup', function () {
-  similarListButtons.appendChild(fragment);
-  document.querySelector('.map').classList.remove('map--faded');
-  document.querySelector('.notice__form').classList.remove('notice__form--disabled');
-});
 
-mapElemnt.addEventListener('click', function () {
-  var target = event.target;
 
-  if (target.tagName !== 'img') {
-    target.parentElement.classList.add('pin--active');
-  }
-  if (target.tagName !== 'button') {
-    target.classList.add('pin--active');
-  }
-
-  // mapElemnt.insertBefore(fragmentCard, mapFilter);
-});
 
 
