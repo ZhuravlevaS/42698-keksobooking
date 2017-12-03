@@ -113,23 +113,37 @@ var getNoticesArr = function (length) {
   return notices;
 };
 
+var cleanClass = function(className, attribute) {
+  for (var i = 0; i < attribute.length; i++) {
+    attribute[i].classList.contains(className) ? attribute[i].classList.remove(className) : null;
+  }
+};
+
+var removeElement = function (elem) {
+  for (var i = 0; i < elem.length; i++) {
+    elem[i].remove();
+  } 
+};
+var fragmentCard = document.createDocumentFragment();
+
 var renderNoticeBtn = function (notice) {
   var noticeElementBtn = similarNoticeButton.cloneNode(true);
   noticeElementBtn.querySelector('.map__pin img').setAttribute('src', notice.author.avatar);
   noticeElementBtn.style.left = notice.location.x + 'px';
   noticeElementBtn.style.top = notice.location.y + 'px';
   noticeElementBtn.addEventListener('click', function (event) { 
-    fragmentCard.appendChild(renderNoticeCard(notice));
-    mapElemnt.insertBefore(fragmentCard, mapFilter);
-
     var target = event.target;
+    var cards = mapElemnt.querySelectorAll('.map__card');
     var buttons = mapElemnt.querySelectorAll('.map__pin');
-    // вынести наружу
-    var cleanPins = function() {
-      for (var i = 0; i < buttons.length; i++) {
-        buttons[i].classList.contains('pin--active') ? buttons[i].classList.remove('pin--active') : null;
-      }
-    }; cleanPins();
+
+    removeElement(cards);
+    fragmentCard.appendChild(renderNoticeCard(notice));
+    mapElemnt.insertBefore(fragmentCard, mapFilter); 
+    document.addEventListener('keydown', closeCardByKey); 
+    
+    
+    cleanClass('pin--active', buttons);    
+
     if (target.tagName === 'IMG') {   
       target.parentElement.classList.add('pin--active');
     } else {
@@ -152,6 +166,8 @@ var renderNoticeCard = function (notice) {
   noticeElementCard.querySelector('.popup__avatar').setAttribute('src', notice.author.avatar);
 
   var popupFeature = noticeElementCard.querySelector('.popup__features');
+  var closeButton = mapElemnt.querySelector('.popup__close');
+  var buttons = mapElemnt.querySelectorAll('.map__pin');
 
   var renderFeature = function () {
     notice.offer.features.forEach(function (featureItem) {
@@ -160,57 +176,32 @@ var renderNoticeCard = function (notice) {
     });
   };
   renderFeature();
+  
+  noticeElementCard.querySelector('.popup__close').addEventListener('click', function () {
+    noticeElementCard.remove();
+    cleanClass('pin--active', buttons);
+  });
 
   return noticeElementCard;
 };
 
-var fragment = document.createDocumentFragment();
-var fragmentCard = document.createDocumentFragment();
+var closeCardByKey = function (event) {
+  var card = mapElemnt.querySelector('.map__card');
+  var buttons = mapElemnt.querySelectorAll('.map__pin');
 
-var drawCard = function (i) {
-  var cardItem = fragmentCard.appendChild(renderNoticeCard(getNoticesArr(NOTICE_QUANTITY)[i]));
-  return cardItem;
+  if (event.keyCode === 27) {
+    card.remove();
+    cleanClass('pin--active', buttons);
+    document.removeEventListener('keydown', closeCardByKey);
+  }
 };
-// drawCard(getRandomNum(0, NOTICE_QUANTITY - 1));
 
+var fragment = document.createDocumentFragment();
 
 for (var l = 0; l < NOTICE_QUANTITY; l++) {
   var drawPin = function (i) {
     var pinFragment = fragment.appendChild(renderNoticeBtn(getNoticesArr(NOTICE_QUANTITY)[i]));
     return pinFragment;
-  };
-  /* var getCurrentCard = function () {
-    drawCard(l).forEach(function (featureItem, index) {
-      return index;
-    });
-  }; */
-
-  // drawCard(l);
-  drawPin(l)
-  // .addEventListener('click', function () {
-  //   var target = event.target;
-  //   var buttons = mapElemnt.querySelectorAll('.map__pin');
-  //   var cleanPins = function() {
-  //     for (var i = 0; i < buttons.length; i++) {
-  //       buttons[i].classList.contain('pin--active') ? buttons[i].classList.remove('pin--active') : null;
-  //     }
-  //   }; cleanPins();
-  //   if (target.tagName !== 'img' || target.tagName !== 'button') {     
-  //     target.parentElement.classList.add('pin--active');
-  //   }
-  //   if (target.tagName !== 'button') {
-  //     for (var i = 0; i < buttons.length; i++) {
-  //       buttons[i].classList.remove('pin--active');
-  //     }
-  //     target.classList.add('pin--active');
-  //   }
-      
-  //   mapElemnt.insertBefore(fragmentCard, mapFilter);
-  // });
+  };  
+  drawPin(l);
 }
-
-
-
-
-
-
