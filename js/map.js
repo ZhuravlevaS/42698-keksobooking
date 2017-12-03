@@ -120,13 +120,15 @@ var removeElement = function (elem) {
   }
 };
 
-
 var renderNoticeBtn = function (notice) {
   var noticeElementBtn = similarNoticeButton.cloneNode(true);
   noticeElementBtn.querySelector('.map__pin img').setAttribute('src', notice.author.avatar);
   noticeElementBtn.style.left = notice.location.x + 'px';
   noticeElementBtn.style.top = notice.location.y + 'px';
   noticeElementBtn.addEventListener('click', function (event) {
+    if (noticeElementBtn.classList.contains('map__pin--active')) {
+      return;
+    }
 
     var target = event.target;
     var card = mapElemnt.querySelector('.map__card');
@@ -145,6 +147,7 @@ var renderNoticeBtn = function (notice) {
     } else {
       target.classList.add('map__pin--active');
     }
+
   });
   return noticeElementBtn;
 };
