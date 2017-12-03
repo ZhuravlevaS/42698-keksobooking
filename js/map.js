@@ -113,16 +113,18 @@ var getNoticesArr = function (length) {
   return notices;
 };
 
-var cleanClass = function(className, attribute) {
-  for (var i = 0; i < attribute.length; i++) {
-    attribute[i].classList.contains(className) ? attribute[i].classList.remove(className) : null;
+var cleanClass = function (className, element) {
+  for (var i = 0; i < element.length; i++) {
+    if (element[i].classList.contains(className)) {
+      element[i].classList.remove(className);
+    }
   }
 };
 
 var removeElement = function (elem) {
   for (var i = 0; i < elem.length; i++) {
     elem[i].remove();
-  } 
+  }
 };
 var fragmentCard = document.createDocumentFragment();
 
@@ -131,20 +133,19 @@ var renderNoticeBtn = function (notice) {
   noticeElementBtn.querySelector('.map__pin img').setAttribute('src', notice.author.avatar);
   noticeElementBtn.style.left = notice.location.x + 'px';
   noticeElementBtn.style.top = notice.location.y + 'px';
-  noticeElementBtn.addEventListener('click', function (event) { 
+  noticeElementBtn.addEventListener('click', function (event) {
     var target = event.target;
     var cards = mapElemnt.querySelectorAll('.map__card');
     var buttons = mapElemnt.querySelectorAll('.map__pin');
 
     removeElement(cards);
     fragmentCard.appendChild(renderNoticeCard(notice));
-    mapElemnt.insertBefore(fragmentCard, mapFilter); 
-    document.addEventListener('keydown', closeCardByKey); 
-    
-    
-    cleanClass('pin--active', buttons);    
+    mapElemnt.insertBefore(fragmentCard, mapFilter);
+    document.addEventListener('keydown', closeCardByKey);
 
-    if (target.tagName === 'IMG') {   
+    cleanClass('pin--active', buttons);
+
+    if (target.tagName === 'IMG') {
       target.parentElement.classList.add('pin--active');
     } else {
       target.classList.add('pin--active');
@@ -166,7 +167,6 @@ var renderNoticeCard = function (notice) {
   noticeElementCard.querySelector('.popup__avatar').setAttribute('src', notice.author.avatar);
 
   var popupFeature = noticeElementCard.querySelector('.popup__features');
-  var closeButton = mapElemnt.querySelector('.popup__close');
   var buttons = mapElemnt.querySelectorAll('.map__pin');
 
   var renderFeature = function () {
@@ -176,7 +176,7 @@ var renderNoticeCard = function (notice) {
     });
   };
   renderFeature();
-  
+
   noticeElementCard.querySelector('.popup__close').addEventListener('click', function () {
     noticeElementCard.remove();
     cleanClass('pin--active', buttons);
@@ -202,6 +202,6 @@ for (var l = 0; l < NOTICE_QUANTITY; l++) {
   var drawPin = function (i) {
     var pinFragment = fragment.appendChild(renderNoticeBtn(getNoticesArr(NOTICE_QUANTITY)[i]));
     return pinFragment;
-  };  
+  };
   drawPin(l);
 }
