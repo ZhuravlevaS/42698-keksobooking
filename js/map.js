@@ -21,6 +21,7 @@ var PinParams = {
 };
 
 var NOTICE_QUANTITY = 8;
+var ESC = 27;
 
 var mapElemnt = document.querySelector('.map');
 var mapFilter = mapElemnt.querySelector('.map__filters-container');
@@ -32,12 +33,6 @@ var btnMain = document.querySelector('.map__pin--main');
 var renderAvatar = function (i) {
   return i <= 9 ? '0' + i : i;
 };
-
-btnMain.addEventListener('mouseup', function () {
-  similarListButtons.appendChild(fragment);
-  document.querySelector('.map').classList.remove('map--faded');
-  document.querySelector('.notice__form').classList.remove('notice__form--disabled');
-});
 
 var getRandomNum = function (min, max) {
   var randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -114,19 +109,17 @@ var getNoticesArr = function (length) {
 };
 
 var cleanClass = function (className, element) {
-  for (var i = 0; i < element.length; i++) {
-    if (element[i].classList.contains(className)) {
-      element[i].classList.remove(className);
-    }
+  if (element && element.classList.contains(className)) {
+    element.classList.remove(className);
   }
 };
 
 var removeElement = function (elem) {
-  for (var i = 0; i < elem.length; i++) {
-    elem[i].remove();
+  if (elem) {
+    elem.remove();
   }
 };
-var fragmentCard = document.createDocumentFragment();
+
 
 var renderNoticeBtn = function (notice) {
   var noticeElementBtn = similarNoticeButton.cloneNode(true);
@@ -134,21 +127,23 @@ var renderNoticeBtn = function (notice) {
   noticeElementBtn.style.left = notice.location.x + 'px';
   noticeElementBtn.style.top = notice.location.y + 'px';
   noticeElementBtn.addEventListener('click', function (event) {
-    var target = event.target;
-    var cards = mapElemnt.querySelectorAll('.map__card');
-    var buttons = mapElemnt.querySelectorAll('.map__pin');
 
-    removeElement(cards);
+    var target = event.target;
+    var card = mapElemnt.querySelector('.map__card');
+    var buttonActive = mapElemnt.querySelector('.map__pin--active');
+    var fragmentCard = document.createDocumentFragment();
+
+    removeElement(card);
     fragmentCard.appendChild(renderNoticeCard(notice));
     mapElemnt.insertBefore(fragmentCard, mapFilter);
     document.addEventListener('keydown', closeCardByKey);
 
-    cleanClass('pin--active', buttons);
+    cleanClass('map__pin--active', buttonActive);
 
     if (target.tagName === 'IMG') {
-      target.parentElement.classList.add('pin--active');
+      target.parentElement.classList.add('map__pin--active');
     } else {
-      target.classList.add('pin--active');
+      target.classList.add('map__pin--active');
     }
   });
   return noticeElementBtn;
@@ -167,7 +162,7 @@ var renderNoticeCard = function (notice) {
   noticeElementCard.querySelector('.popup__avatar').setAttribute('src', notice.author.avatar);
 
   var popupFeature = noticeElementCard.querySelector('.popup__features');
-  var buttons = mapElemnt.querySelectorAll('.map__pin');
+  var buttonActive = mapElemnt.querySelector('.map__pin--active');
 
   var renderFeature = function () {
     notice.offer.features.forEach(function (featureItem) {
@@ -179,29 +174,35 @@ var renderNoticeCard = function (notice) {
 
   noticeElementCard.querySelector('.popup__close').addEventListener('click', function () {
     noticeElementCard.remove();
-    cleanClass('pin--active', buttons);
+    cleanClass('map__pin--active', buttonActive);
   });
 
   return noticeElementCard;
 };
 
-var closeCardByKey = function (event) {
+var closeCardByKey = function (evt) {
   var card = mapElemnt.querySelector('.map__card');
-  var buttons = mapElemnt.querySelectorAll('.map__pin');
+  var buttonActive = mapElemnt.querySelector('.map__pin--active');
 
-  if (event.keyCode === 27) {
+  if (evt.keyCode === ESC) {
     card.remove();
-    cleanClass('pin--active', buttons);
+    cleanClass('map__pin--active', buttonActive);
     document.removeEventListener('keydown', closeCardByKey);
   }
 };
 
-var fragment = document.createDocumentFragment();
+btnMain.addEventListener('mouseup', function () {
+  document.querySelector('.map').classList.remove('map--faded');
+  document.querySelector('.notice__form').classList.remove('notice__form--disabled');
+  var fragment = document.createDocumentFragment();
 
-for (var l = 0; l < NOTICE_QUANTITY; l++) {
-  var drawPin = function (i) {
-    var pinFragment = fragment.appendChild(renderNoticeBtn(getNoticesArr(NOTICE_QUANTITY)[i]));
-    return pinFragment;
+  var drawPins = function (pinNumber) {
+    for (var l = 0; l < pinNumber; l++) {
+      var pin = renderNoticeBtn(getNoticesArr(NOTICE_QUANTITY)[l]);
+      fragment.appendChild(pin);
+    }
   };
-  drawPin(l);
-}
+  drawPins(NOTICE_QUANTITY);
+
+  similarListButtons.appendChild(fragment);
+});
