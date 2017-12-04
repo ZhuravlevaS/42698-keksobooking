@@ -208,3 +208,17 @@ btnMain.addEventListener('mouseup', function () {
 
   similarListButtons.appendChild(fragment);
 });
+
+// Валидация формы
+var form = document.querySelector('.notice__form');
+var titleInput = form.querySelector('#title');
+
+// проверка минимального кол-ва символов для EDGE
+titleInput.addEventListener('input', function (evt) {
+  var target = evt.target;
+  if (target.value.length < 30) {
+    target.setCustomValidity('Имя должно состоять минимум из 2-х символов');
+  } else {
+    target.setCustomValidity('');
+  }
+});
