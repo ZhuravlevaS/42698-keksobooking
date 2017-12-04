@@ -119,12 +119,12 @@ var renderNoticeBtn = function (notice) {
   noticeElementBtn.querySelector('.map__pin img').setAttribute('src', notice.author.avatar);
   noticeElementBtn.style.left = notice.location.x + 'px';
   noticeElementBtn.style.top = notice.location.y + 'px';
-  noticeElementBtn.addEventListener('click', function (event) {
+  noticeElementBtn.addEventListener('click', function (evt) {
     if (noticeElementBtn.classList.contains('map__pin--active')) {
       return;
     }
 
-    var target = event.target;
+    var target = evt.target;
     var card = mapElement.querySelector('.map__card');
     var buttonActive = mapElement.querySelector('.map__pin--active');
     var fragmentCard = document.createDocumentFragment();
