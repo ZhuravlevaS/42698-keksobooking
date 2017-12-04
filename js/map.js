@@ -23,8 +23,8 @@ var PinParams = {
 var NOTICE_QUANTITY = 8;
 var ESC = 27;
 
-var mapElemnt = document.querySelector('.map');
-var mapFilter = mapElemnt.querySelector('.map__filters-container');
+var mapElement = document.querySelector('.map');
+var mapFilter = mapElement.querySelector('.map__filters-container');
 var similarListButtons = document.querySelector('.map__pins');
 var similarNoticeButton = document.querySelector('template').content.querySelector('.map__pin');
 var similarNoticeCard = document.querySelector('template').content.querySelector('article.map__card');
@@ -108,15 +108,9 @@ var getNoticesArr = function (length) {
   return notices;
 };
 
-var cleanClass = function (className, element) {
-  if (element && element.classList.contains(className)) {
-    element.classList.remove(className);
-  }
-};
-
-var removeElement = function (elem) {
+var removeElementFromMap = function (elem) {
   if (elem) {
-    elem.remove();
+    mapElement.removeChild(elem);
   }
 };
 
@@ -131,16 +125,18 @@ var renderNoticeBtn = function (notice) {
     }
 
     var target = event.target;
-    var card = mapElemnt.querySelector('.map__card');
-    var buttonActive = mapElemnt.querySelector('.map__pin--active');
+    var card = mapElement.querySelector('.map__card');
+    var buttonActive = mapElement.querySelector('.map__pin--active');
     var fragmentCard = document.createDocumentFragment();
 
-    removeElement(card);
+    removeElementFromMap(card);
     fragmentCard.appendChild(renderNoticeCard(notice));
-    mapElemnt.insertBefore(fragmentCard, mapFilter);
+    mapElement.insertBefore(fragmentCard, mapFilter);
     document.addEventListener('keydown', closeCardByKey);
 
-    cleanClass('map__pin--active', buttonActive);
+    if (buttonActive && buttonActive.classList.contains('map__pin--active')) {
+      buttonActive.classList.remove('map__pin--active');
+    }
 
     if (target.tagName === 'IMG') {
       target.parentElement.classList.add('map__pin--active');
@@ -165,7 +161,7 @@ var renderNoticeCard = function (notice) {
   noticeElementCard.querySelector('.popup__avatar').setAttribute('src', notice.author.avatar);
 
   var popupFeature = noticeElementCard.querySelector('.popup__features');
-  var buttonActive = mapElemnt.querySelector('.map__pin--active');
+  var buttonActive = mapElement.querySelector('.map__pin--active');
 
   var renderFeature = function () {
     notice.offer.features.forEach(function (featureItem) {
@@ -176,20 +172,23 @@ var renderNoticeCard = function (notice) {
   renderFeature();
 
   noticeElementCard.querySelector('.popup__close').addEventListener('click', function () {
-    noticeElementCard.remove();
-    cleanClass('map__pin--active', buttonActive);
+    mapElement.removeChild(noticeElementCard);
+    if (buttonActive && buttonActive.classList.contains('map__pin--active')) {
+      buttonActive.classList.remove('map__pin--active');
+    }
   });
 
   return noticeElementCard;
 };
 
 var closeCardByKey = function (evt) {
-  var card = mapElemnt.querySelector('.map__card');
-  var buttonActive = mapElemnt.querySelector('.map__pin--active');
-
   if (evt.keyCode === ESC) {
-    card.remove();
-    cleanClass('map__pin--active', buttonActive);
+    var card = mapElement.querySelector('.map__card');
+    var buttonActive = mapElement.querySelector('.map__pin--active');
+    mapElement.removeChild(card);
+    if (buttonActive && buttonActive.classList.contains('map__pin--active')) {
+      buttonActive.classList.remove('map__pin--active');
+    }
     document.removeEventListener('keydown', closeCardByKey);
   }
 };
