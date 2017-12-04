@@ -21,12 +21,14 @@ var PinParams = {
 };
 
 var NOTICE_QUANTITY = 8;
+var ESC = 27;
 
-var mapElemnt = document.querySelector('.map');
-var mapFilter = mapElemnt.querySelector('.map__filters-container');
+var mapElement = document.querySelector('.map');
+var mapFilter = mapElement.querySelector('.map__filters-container');
 var similarListButtons = document.querySelector('.map__pins');
 var similarNoticeButton = document.querySelector('template').content.querySelector('.map__pin');
 var similarNoticeCard = document.querySelector('template').content.querySelector('article.map__card');
+var btnMain = document.querySelector('.map__pin--main');
 
 var renderAvatar = function (i) {
   return i <= 9 ? '0' + i : i;
@@ -106,14 +108,46 @@ var getNoticesArr = function (length) {
   return notices;
 };
 
+var removeElementFromMap = function (elem) {
+  if (elem) {
+    mapElement.removeChild(elem);
+  }
+};
+
 var renderNoticeBtn = function (notice) {
   var noticeElementBtn = similarNoticeButton.cloneNode(true);
   noticeElementBtn.querySelector('.map__pin img').setAttribute('src', notice.author.avatar);
   noticeElementBtn.style.left = notice.location.x + 'px';
   noticeElementBtn.style.top = notice.location.y + 'px';
+  noticeElementBtn.addEventListener('click', function (evt) {
+    if (noticeElementBtn.classList.contains('map__pin--active')) {
+      return;
+    }
 
+    var target = evt.target;
+    var card = mapElement.querySelector('.map__card');
+    var buttonActive = mapElement.querySelector('.map__pin--active');
+    var fragmentCard = document.createDocumentFragment();
+
+    removeElementFromMap(card);
+    fragmentCard.appendChild(renderNoticeCard(notice));
+    mapElement.insertBefore(fragmentCard, mapFilter);
+    document.addEventListener('keydown', closeCardByKey);
+
+    if (buttonActive && buttonActive.classList.contains('map__pin--active')) {
+      buttonActive.classList.remove('map__pin--active');
+    }
+
+    if (target.tagName === 'IMG') {
+      target.parentElement.classList.add('map__pin--active');
+    } else {
+      target.classList.add('map__pin--active');
+    }
+
+  });
   return noticeElementBtn;
 };
+
 
 var renderNoticeCard = function (notice) {
   var noticeElementCard = similarNoticeCard.cloneNode(true);
@@ -127,6 +161,7 @@ var renderNoticeCard = function (notice) {
   noticeElementCard.querySelector('.popup__avatar').setAttribute('src', notice.author.avatar);
 
   var popupFeature = noticeElementCard.querySelector('.popup__features');
+  var buttonActive = mapElement.querySelector('.map__pin--active');
 
   var renderFeature = function () {
     notice.offer.features.forEach(function (featureItem) {
@@ -136,26 +171,40 @@ var renderNoticeCard = function (notice) {
   };
   renderFeature();
 
+  noticeElementCard.querySelector('.popup__close').addEventListener('click', function () {
+    mapElement.removeChild(noticeElementCard);
+    if (buttonActive && buttonActive.classList.contains('map__pin--active')) {
+      buttonActive.classList.remove('map__pin--active');
+    }
+  });
+
   return noticeElementCard;
 };
 
-var fragment = document.createDocumentFragment();
-var fragmentCard = document.createDocumentFragment();
+var closeCardByKey = function (evt) {
+  if (evt.keyCode === ESC) {
+    var card = mapElement.querySelector('.map__card');
+    var buttonActive = mapElement.querySelector('.map__pin--active');
+    mapElement.removeChild(card);
+    if (buttonActive && buttonActive.classList.contains('map__pin--active')) {
+      buttonActive.classList.remove('map__pin--active');
+    }
+    document.removeEventListener('keydown', closeCardByKey);
+  }
+};
 
-var drawCard = function (i) {
-  var cardItem = fragmentCard.appendChild(renderNoticeCard(getNoticesArr(NOTICE_QUANTITY)[i]));
-  return cardItem;
-}; drawCard(getRandomNum(0, NOTICE_QUANTITY - 1));
+btnMain.addEventListener('mouseup', function () {
+  document.querySelector('.map').classList.remove('map--faded');
+  document.querySelector('.notice__form').classList.remove('notice__form--disabled');
+  var fragment = document.createDocumentFragment();
 
-for (var l = 0; l < NOTICE_QUANTITY; l++) {
-  var drawPin = function (i) {
-    var pinFragment = fragment.appendChild(renderNoticeBtn(getNoticesArr(NOTICE_QUANTITY)[i]));
-    return pinFragment;
+  var drawPins = function (pinNumber) {
+    for (var l = 0; l < pinNumber; l++) {
+      var pin = renderNoticeBtn(getNoticesArr(NOTICE_QUANTITY)[l]);
+      fragment.appendChild(pin);
+    }
   };
-  drawPin(l);
-}
+  drawPins(NOTICE_QUANTITY);
 
-similarListButtons.appendChild(fragment);
-mapElemnt.insertBefore(fragmentCard, mapFilter);
-
-document.querySelector('.map').classList.remove('map--faded');
+  similarListButtons.appendChild(fragment);
+});
