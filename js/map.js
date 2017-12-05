@@ -114,6 +114,12 @@ var removeElementFromMap = function (elem) {
   }
 };
 
+var removeClass = function (elem, className) {
+  if (elem && elem.classList.contains(className)) {
+    elem.classList.remove(className);
+  }
+};
+
 var renderNoticeBtn = function (notice) {
   var noticeElementBtn = similarNoticeButton.cloneNode(true);
   noticeElementBtn.querySelector('.map__pin img').setAttribute('src', notice.author.avatar);
@@ -134,9 +140,7 @@ var renderNoticeBtn = function (notice) {
     mapElement.insertBefore(fragmentCard, mapFilter);
     document.addEventListener('keydown', closeCardByKey);
 
-    if (buttonActive && buttonActive.classList.contains('map__pin--active')) {
-      buttonActive.classList.remove('map__pin--active');
-    }
+    removeClass(buttonActive, 'map__pin--active');
 
     if (target.tagName === 'IMG') {
       target.parentElement.classList.add('map__pin--active');
@@ -173,9 +177,7 @@ var renderNoticeCard = function (notice) {
 
   noticeElementCard.querySelector('.popup__close').addEventListener('click', function () {
     mapElement.removeChild(noticeElementCard);
-    if (buttonActive && buttonActive.classList.contains('map__pin--active')) {
-      buttonActive.classList.remove('map__pin--active');
-    }
+    removeClass(buttonActive, 'map__pin--active');
   });
 
   return noticeElementCard;
@@ -186,9 +188,7 @@ var closeCardByKey = function (evt) {
     var card = mapElement.querySelector('.map__card');
     var buttonActive = mapElement.querySelector('.map__pin--active');
     mapElement.removeChild(card);
-    if (buttonActive && buttonActive.classList.contains('map__pin--active')) {
-      buttonActive.classList.remove('map__pin--active');
-    }
+    removeClass(buttonActive, 'map__pin--active');
     document.removeEventListener('keydown', closeCardByKey);
   }
 };
