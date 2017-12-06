@@ -10,21 +10,13 @@ var timeOutSelect = form.querySelector('#timeout');
 var typeOfApartSelect = form.querySelector('#type');
 var roomNumberSelect = form.querySelector('#room_number');
 var capacitySelect = form.querySelector('#capacity');
-var buttomFormSubmit = form.querySelector('.form__submit');
 var mainPin = document.querySelector('.map__pin--main');
 
 
-function getCoords(elem) { // кроме IE8-
-  var box = elem.getBoundingClientRect();
+var HUNDRED_VALUE_ROOMS = '100';
+var ZERO_VALUE_GUEST = '0';
 
-  return {
-    top: box.top + pageYOffset,
-    left: box.left + pageXOffset
-  };
-
-}
-
-adressInput.value = getCoords(mainPin).top + ', ' + getCoords(mainPin).left;
+adressInput.value = getComputedStyle(mainPin).top + ', ' + getComputedStyle(mainPin).left;
 
 var TYPE_APARTS_PARAM = {
   bungalo: 0,
@@ -40,47 +32,58 @@ var ROOMS_PARAMS = {
   '100': ['0']
 };
 
-var validate = function () {
-  var errorStyle = 'box-shadow: 0 0 4px 1px #ff6547';
-  var validHasValue = function (elem) {
-    if (!elem.value) {
-      elem.style = errorStyle;
-    }
-  };
-  validHasValue(titleInput);
-  validHasValue(adressInput);
-  var validTrueValue = function () {
-    if (priceInput.value < priceInput.getAttribute('min')) {
-      priceInput.style = errorStyle;
-    }
-  };
-  validTrueValue();
+// var validate = function () {
+//   var errorStyle = 'border: 1px solid #ff6547';
+//   var validHasValue = function (elem) {
+//     if (!elem.value) {
+//       elem.style = errorStyle;
+//     }
+//   };
+//   validHasValue(titleInput);
+//   validHasValue(adressInput);
+//   var validTrueValue = function () {
+//     if (priceInput.value < priceInput.getAttribute('min')) {
+//       priceInput.style = errorStyle;
+//     }
+//   };
+//   validTrueValue();
+// };
+// var validHasValue = function (elem, style) {
+//   if (!elem.value) {
+//     elem.style = style;
+//   }
+// };
+
+form.addEventListener('invalid', function (evt) {
+  var errorStyle = 'border: 1px solid #ff6547';
+  var target = evt.target;
+
+  target.style = errorStyle;
+});
+
+// titleInput.addEventListener('invalid', function () {
+//   if (titleInput.validity.tooShort) {
+//     titleInput.setCustomValidity('Имя должно состоять минимум из 30 символов');
+//   } else if (titleInput.validity.tooLong) {
+//     titleInput.setCustomValidity('Имя не должно превышать 100 символов');
+//   } else if (titleInput.validity.valueMissing) {
+//     titleInput.setCustomValidity('Обязательное поле');
+//   } else {
+//     titleInput.setCustomValidity('');
+//   }
+// });
+
+var syncValue = function (elem, evt) {
+  var target = evt.target;
+  elem.value = target.value;
 };
 
-buttomFormSubmit.addEventListener('click', function () {
-  validate();
-});
-
-titleInput.addEventListener('invalid', function () {
-  if (titleInput.validity.tooShort) {
-    titleInput.setCustomValidity('Имя должно состоять минимум из 30 символов');
-  } else if (titleInput.validity.tooLong) {
-    titleInput.setCustomValidity('Имя не должно превышать 100 символов');
-  } else if (titleInput.validity.valueMissing) {
-    titleInput.setCustomValidity('Обязательное поле');
-  } else {
-    titleInput.setCustomValidity('');
-  }
-});
-
 timeInSelect.addEventListener('change', function (evt) {
-  var target = evt.target;
-  timeOutSelect.value = target.value;
+  syncValue(timeOutSelect, evt);
 });
 
 timeOutSelect.addEventListener('change', function (evt) {
-  var target = evt.target;
-  timeInSelect.value = target.value;
+  syncValue(timeInSelect, evt);
 });
 
 typeOfApartSelect.addEventListener('change', function (evt) {
@@ -89,8 +92,6 @@ typeOfApartSelect.addEventListener('change', function (evt) {
 
 roomNumberSelect.addEventListener('change', function (evt) {
   var target = evt.target;
-  var HUNDRED_VALUE_ROOMS = '100';
-  var ZERO_VALUE_GUEST = '0';
   var capacityArr = capacitySelect.querySelectorAll('option');
   var elemMap = target.value;
 
@@ -100,16 +101,10 @@ roomNumberSelect.addEventListener('change', function (evt) {
     capacitySelect.value = target.value;
   }
 
-  var cleanDisabled = function () {
-    var desabledOptions = capacitySelect.querySelectorAll('option[disabled]');
-    if (desabledOptions) {
-      for (var i = 0; i < desabledOptions.length; i++) {
-        capacitySelect.querySelector('option[disabled]').removeAttribute('disabled', 'disabled');
-      }
-    }
-  }; cleanDisabled();
   for (var i = 0; i < capacityArr.length; i++) {
-    if (ROOMS_PARAMS[elemMap].indexOf(capacityArr[i].value) === -1) {
+    if (ROOMS_PARAMS[elemMap].includes(capacityArr[i].value)) {
+      capacityArr[i].removeAttribute('disabled', 'disabled');
+    } else {
       capacityArr[i].setAttribute('disabled', 'disabled');
     }
   }
