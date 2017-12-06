@@ -115,7 +115,7 @@ var removeElementFromMap = function (elem) {
 };
 
 var removeClass = function (elem, className) {
-  if (elem && elem.classList.contains(className)) {
+  if (elem) {
     elem.classList.remove(className);
   }
 };

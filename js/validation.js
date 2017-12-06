@@ -3,14 +3,63 @@
 // Валидация формы
 var form = document.querySelector('.notice__form');
 var titleInput = form.querySelector('#title');
+var adressInput = form.querySelector('#address');
 var priceInput = form.querySelector('#price');
 var timeInSelect = form.querySelector('#timein');
 var timeOutSelect = form.querySelector('#timeout');
-var TypeOfApartSelect = form.querySelector('#type');
-var PriceInput = form.querySelector('#price');
-var RoomNumberSelect = form.querySelector('#room_number');
-var CapacitySelect = form.querySelector('#capacity');
+var typeOfApartSelect = form.querySelector('#type');
+var roomNumberSelect = form.querySelector('#room_number');
+var capacitySelect = form.querySelector('#capacity');
+var buttomFormSubmit = form.querySelector('.form__submit');
+var mainPin = document.querySelector('.map__pin--main');
 
+
+function getCoords(elem) { // кроме IE8-
+  var box = elem.getBoundingClientRect();
+
+  return {
+    top: box.top + pageYOffset,
+    left: box.left + pageXOffset
+  };
+
+}
+
+adressInput.value = getCoords(mainPin).top + ', ' + getCoords(mainPin).left;
+
+var TYPE_APARTS_PARAM = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
+
+var MAP = {
+  '1': ['1'],
+  '2': ['1', '2'],
+  '3': ['1', '2', '3'],
+  '100': ['0']
+};
+
+var validate = function () {
+  var errorStyle = 'box-shadow: 0 0 4px 1px #ff6547';
+  var validHasValue = function (elem) {
+    if (!elem.value) {
+      elem.style = errorStyle;
+    }
+  };
+  validHasValue(titleInput);
+  validHasValue(adressInput);
+  var validTrueValue = function () {
+    if (priceInput.value < priceInput.getAttribute('min')) {
+      priceInput.style = errorStyle;
+    }
+  };
+  validTrueValue();
+};
+
+buttomFormSubmit.addEventListener('click', function () {
+  validate();
+});
 
 titleInput.addEventListener('invalid', function () {
   if (titleInput.validity.tooShort) {
@@ -24,105 +73,44 @@ titleInput.addEventListener('invalid', function () {
   }
 });
 
-// проверка минимального кол-ва символов для EDGE
-titleInput.addEventListener('input', function (evt) {
+timeInSelect.addEventListener('change', function (evt) {
   var target = evt.target;
-  if (target.value.length < 30) {
-    target.setCustomValidity('Имя должно состоять минимум из 30 символов');
+  timeOutSelect.value = target.value;
+});
+
+timeOutSelect.addEventListener('change', function (evt) {
+  var target = evt.target;
+  timeInSelect.value = target.value;
+});
+
+typeOfApartSelect.addEventListener('change', function (evt) {
+  priceInput.setAttribute('min', TYPE_APARTS_PARAM[evt.target.value]);
+});
+
+roomNumberSelect.addEventListener('change', function (evt) {
+  var target = evt.target;
+  var HUNDRED_VALUE_ROOMS = '100';
+  var ZERO_VALUE_GUEST = '0';
+  var capacityArr = capacitySelect.querySelectorAll('option');
+  var ElemMap = target.value;
+
+  if (target.value === HUNDRED_VALUE_ROOMS) {
+    capacitySelect.value = ZERO_VALUE_GUEST;
   } else {
-    target.setCustomValidity('');
+    capacitySelect.value = target.value;
   }
-});
 
-priceInput.addEventListener('input', function (evt) {
-  var target = evt.target;
-  if (target.value < 0) {
-    target.setCustomValidity('Цена должна быть больше 0');
-  } else if (target.value > 1000000) {
-    target.setCustomValidity('Цена должна быть меньше или равно 1 000 000');
-  } else {
-    target.setCustomValidity('');
-  }
-});
-
-timeInSelect.addEventListener('input', function (evt) {
-  var target = evt.target;
-  if (target.value) {
-    var value = '"' + target.value + '"' + ']';
-    timeOutSelect.querySelector('[selected]').removeAttribute('selected');
-    timeOutSelect.querySelector('[value = ' + value).setAttribute('selected', 'selected');
-  }
-});
-
-timeOutSelect.addEventListener('input', function (evt) {
-  var target = evt.target;
-  if (target.value) {
-    var value = '"' + target.value + '"' + ']';
-    timeInSelect.querySelector('[selected]').removeAttribute('selected');
-    timeInSelect.querySelector('[value = ' + value).setAttribute('selected', 'selected');
-  }
-});
-
-TypeOfApartSelect.addEventListener('input', function (evt) {
-  var target = evt.target;
-  if (target.value === 'flat') {
-    PriceInput.setAttribute('min', '1000');
-  } if (target.value === 'bungalo') {
-    PriceInput.setAttribute('min', '0');
-  } if (target.value === 'house') {
-    PriceInput.setAttribute('min', '5000');
-  } if (target.value === 'palace') {
-    PriceInput.setAttribute('min', '10000');
-  }
-});
-
-RoomNumberSelect.addEventListener('input', function (evt) {
-  var target = evt.target;
   var cleanDisabled = function () {
-    var desabledOptions = CapacitySelect.querySelectorAll('option[disabled]');
+    var desabledOptions = capacitySelect.querySelectorAll('option[disabled]');
     if (desabledOptions) {
       for (var i = 0; i < desabledOptions.length; i++) {
-        CapacitySelect.querySelector('option[disabled]').removeAttribute('disabled', 'disabled');
+        capacitySelect.querySelector('option[disabled]').removeAttribute('disabled', 'disabled');
       }
     }
-  };
-  // var value = '"' + target.value + '"' + ']';
-  if (target.value === '1') {
-    CapacitySelect.querySelector('[selected]').removeAttribute('selected');
-    CapacitySelect.querySelector('[value = "1"]').setAttribute('selected', 'selected');
-    cleanDisabled();
-    var notNeedOptionsValue1 = CapacitySelect.querySelectorAll('option:not([value = "1"])');
-
-    for (var i = 0; i < notNeedOptionsValue1.length; i++) {
-      notNeedOptionsValue1[i].setAttribute('disabled', 'disabled');
-    }
-
-  } if (target.value === '2') {
-    CapacitySelect.querySelector('[selected]').removeAttribute('selected');
-    CapacitySelect.querySelector('[value = "2"]').setAttribute('selected', 'selected');
-    cleanDisabled();
-    var notNeedOptionsValue2 = CapacitySelect.querySelectorAll('option[value = "2"] ~ option');
-
-    for (var q = 0; q < notNeedOptionsValue2.length; q++) {
-      notNeedOptionsValue2[q].setAttribute('disabled', 'disabled');
-    }
-  } if (target.value === '3') {
-    CapacitySelect.querySelector('[selected]').removeAttribute('selected');
-    CapacitySelect.querySelector('[value = "3"]').setAttribute('selected', 'selected');
-    cleanDisabled();
-    var notNeedOptionsValue3 = CapacitySelect.querySelectorAll('option[value = "3"] ~ option');
-
-    for (var w = 0; w < notNeedOptionsValue3.length; w++) {
-      notNeedOptionsValue3[w].setAttribute('disabled', 'disabled');
-    }
-  } if (target.value === '100') {
-    CapacitySelect.querySelector('[selected]').removeAttribute('selected');
-    CapacitySelect.querySelector('[value = "0"]').setAttribute('selected', 'selected');
-    cleanDisabled();
-    var notNeedOptionsValue0 = CapacitySelect.querySelectorAll('option:not([value = "0"])');
-
-    for (var e = 0; e < notNeedOptionsValue0.length; e++) {
-      notNeedOptionsValue0[e].setAttribute('disabled', 'disabled');
+  }; cleanDisabled();
+  for (var i = 0; i < capacityArr.length; i++) {
+    if (MAP[ElemMap].indexOf(capacityArr[i].value) === -1) {
+      capacityArr[i].setAttribute('disabled', 'disabled');
     }
   }
 });
