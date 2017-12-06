@@ -33,7 +33,7 @@ var TYPE_APARTS_PARAM = {
   palace: 10000
 };
 
-var MAP = {
+var ROOMS_PARAMS = {
   '1': ['1'],
   '2': ['1', '2'],
   '3': ['1', '2', '3'],
@@ -92,7 +92,7 @@ roomNumberSelect.addEventListener('change', function (evt) {
   var HUNDRED_VALUE_ROOMS = '100';
   var ZERO_VALUE_GUEST = '0';
   var capacityArr = capacitySelect.querySelectorAll('option');
-  var ElemMap = target.value;
+  var elemMap = target.value;
 
   if (target.value === HUNDRED_VALUE_ROOMS) {
     capacitySelect.value = ZERO_VALUE_GUEST;
@@ -109,7 +109,7 @@ roomNumberSelect.addEventListener('change', function (evt) {
     }
   }; cleanDisabled();
   for (var i = 0; i < capacityArr.length; i++) {
-    if (MAP[ElemMap].indexOf(capacityArr[i].value) === -1) {
+    if (ROOMS_PARAMS[elemMap].indexOf(capacityArr[i].value) === -1) {
       capacityArr[i].setAttribute('disabled', 'disabled');
     }
   }
