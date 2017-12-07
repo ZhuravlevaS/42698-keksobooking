@@ -11,6 +11,7 @@ var roomNumberSelect = form.querySelector('#room_number');
 var capacitySelect = form.querySelector('#capacity');
 var mainPin = document.querySelector('.map__pin--main');
 
+var ERROR_STYLE = 'border: 1px solid #ff6547';
 
 adressInput.value = getComputedStyle(mainPin).top + ', ' + getComputedStyle(mainPin).left;
 
@@ -21,7 +22,7 @@ var typeApartsParams = {
   palace: 10000
 };
 
-var roomsParams = {
+var roomsActiveElem = {
   '1': ['1'],
   '2': ['1', '2'],
   '3': ['1', '2', '3'],
@@ -36,10 +37,9 @@ var roomsValue = {
 };
 
 form.addEventListener('invalid', function (evt) {
-  var errorStyle = 'border: 1px solid #ff6547';
   var target = evt.target;
 
-  target.style = errorStyle;
+  target.style = ERROR_STYLE;
 }, true);
 
 var syncValue = function (elem, evt) {
@@ -67,6 +67,6 @@ roomNumberSelect.addEventListener('change', function (evt) {
   capacitySelect.value = roomsValue[targetValue];
 
   capacityArr.forEach(function (elem) {
-    elem.disabled = !roomsParams[targetValue].includes(elem.value);
+    elem.disabled = !roomsActiveElem[targetValue].includes(elem.value);
   });
 });
