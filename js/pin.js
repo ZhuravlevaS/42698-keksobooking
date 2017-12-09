@@ -34,7 +34,7 @@
         var fragmentCard = document.createDocumentFragment();
 
         fragmentCard.appendChild(window.Card.render(notice));
-        
+
         removeElementFromMap(card);
         mapElement.insertBefore(fragmentCard, mapFilter);
         window.utils.removeClass(buttonActive, 'map__pin--active');
