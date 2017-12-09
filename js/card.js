@@ -4,9 +4,34 @@
   var similarNoticeCard = document.querySelector('template').content.querySelector('article.map__card');
   var ESC = 27;
   var mapElement = document.querySelector('.map');
+  var buttonActive = mapElement.querySelector('.map__pin--active');
 
-  window.renderCard = {
-    renderNoticeCard: function (notice) {
+  var renderFeature = function (arr, block) {
+    arr.forEach(function (featureItem) {
+      var li = document.createElement('li');
+      block.appendChild(li).classList.add('feature', 'feature--' + featureItem);
+    });
+  };
+
+  var closeCardHandler = function (elem, parent) {
+    elem.addEventListener('click', function () {
+      mapElement.removeChild(parent);
+      window.utils.removeClass(buttonActive, 'map__pin--active');
+    });
+  };
+
+  var closeCardByKey = function (evt) {
+    if (evt.keyCode === ESC) {
+      var card = mapElement.querySelector('.map__card');
+
+      mapElement.removeChild(card);
+      window.utils.removeClass(buttonActive, 'map__pin--active');
+      document.removeEventListener('keydown', closeCardByKey);
+    }
+  };
+
+  window.Card = {
+    render: function (notice) {
       var noticeElementCard = similarNoticeCard.cloneNode(true);
 
       noticeElementCard.querySelector('h3').textContent = notice.offer.title;
@@ -18,16 +43,11 @@
       noticeElementCard.querySelector('.popup__avatar').setAttribute('src', notice.author.avatar);
 
       var popupFeature = noticeElementCard.querySelector('.popup__features');
-      var buttonActive = mapElement.querySelector('.map__pin--active');
-      notice.offer.features.forEach(function (featureItem) {
-        var li = document.createElement('li');
-        popupFeature.appendChild(li).classList.add('feature', 'feature--' + featureItem);
-      });
+      var buttonClose = noticeElementCard.querySelector('.popup__close');
 
-      noticeElementCard.querySelector('.popup__close').addEventListener('click', function () {
-        mapElement.removeChild(noticeElementCard);
-        window.utils.removeClass(buttonActive, 'map__pin--active');
-      });
+      renderFeature(notice.offer.features, popupFeature);
+      closeCardHandler(buttonClose, noticeElementCard);
+      document.addEventListener('keydown', closeCardByKey);
 
       return noticeElementCard;
     },
@@ -42,16 +62,6 @@
       TYPES_OF_APART: ['flat', 'house', 'bungalo'],
       TIMES: ['12:00', '13:00', '14:00'],
       FEATURES_OF_APART: ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner']
-    },
-
-    closeCardByKey: function (evt) {
-      if (evt.keyCode === ESC) {
-        var card = mapElement.querySelector('.map__card');
-        var buttonActive = mapElement.querySelector('.map__pin--active');
-        mapElement.removeChild(card);
-        window.utils.removeClass(buttonActive, 'map__pin--active');
-        document.removeEventListener('keydown', window.renderCard.closeCardByKey);
-      }
     }
   };
 })();

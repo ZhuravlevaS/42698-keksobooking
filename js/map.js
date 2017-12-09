@@ -12,7 +12,7 @@
 
 
     for (var i = 0; i < NOTICE_QUANTITY; i++) {
-      var pin = window.renderPin.renderNoticeBtn(window.data.getNoticesArr(NOTICE_QUANTITY)[i]);
+      var pin = window.Pin.render(window.data.getNoticesArr(NOTICE_QUANTITY)[i]);
       fragment.appendChild(pin);
     }
     similarListButtons.appendChild(fragment);
