@@ -2,25 +2,16 @@
 
 (function () {
   var similarNoticeButton = document.querySelector('template').content.querySelector('.map__pin');
-  var mapFilter = window.data.mapElement.querySelector('.map__filters-container');
+  var mapElement = document.querySelector('.map');
+  var mapFilter = mapElement.querySelector('.map__filters-container');
 
   var removeElementFromMap = function (elem) {
     if (elem) {
-      window.data.mapElement.removeChild(elem);
+      mapElement.removeChild(elem);
     }
   };
 
-  var closeCardByKey = function (evt) {
-    if (evt.keyCode === window.data.ESC) {
-      var card = window.data.mapElement.querySelector('.map__card');
-      var buttonActive = window.data.mapElement.querySelector('.map__pin--active');
-      window.data.mapElement.removeChild(card);
-      window.data.removeClass(buttonActive, 'map__pin--active');
-      document.removeEventListener('keydown', closeCardByKey);
-    }
-  };
-
-  window.pin = {
+  window.renderPin = {
     renderNoticeBtn: function (notice) {
       var noticeElementBtn = similarNoticeButton.cloneNode(true);
       noticeElementBtn.querySelector('.map__pin img').setAttribute('src', notice.author.avatar);
@@ -32,16 +23,16 @@
         }
 
         var target = evt.target;
-        var card = window.data.mapElement.querySelector('.map__card');
-        var buttonActive = window.data.mapElement.querySelector('.map__pin--active');
+        var card = mapElement.querySelector('.map__card');
+        var buttonActive = mapElement.querySelector('.map__pin--active');
         var fragmentCard = document.createDocumentFragment();
 
         removeElementFromMap(card);
-        fragmentCard.appendChild(window.card.renderNoticeCard(notice));
-        window.data.mapElement.insertBefore(fragmentCard, mapFilter);
-        document.addEventListener('keydown', closeCardByKey);
+        fragmentCard.appendChild(window.renderCard.renderNoticeCard(notice));
+        mapElement.insertBefore(fragmentCard, mapFilter);
+        document.addEventListener('keydown', window.renderCard.closeCardByKey);
 
-        window.data.removeClass(buttonActive, 'map__pin--active');
+        window.utils.removeClass(buttonActive, 'map__pin--active');
 
         if (target.tagName === 'IMG') {
           target.parentElement.classList.add('map__pin--active');
@@ -51,6 +42,12 @@
 
       });
       return noticeElementBtn;
+    },
+    PinParams: {
+      MIN_X: 300,
+      MAX_X: 900,
+      MIN_Y: 100,
+      MAX_Y: 500
     }
   };
 })();
