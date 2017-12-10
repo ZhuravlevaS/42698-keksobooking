@@ -1,10 +1,12 @@
 'use strict';
+
 (function () {
   window.utils = {
     getRandomNum: function (min, max) {
       var randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
       return randomNum;
     },
+
     shuffleArray: function (arr) {
       var newArr = [];
       var copyArr = arr.slice();
@@ -15,10 +17,12 @@
       }
       return newArr;
     },
+
     getRandomArrLength: function (arr) {
       var length = window.utils.getRandomNum(0, arr.length - 1);
       return length;
     },
+
     getRandomArr: function (array, length) {
       var randomArray = [];
 
@@ -33,6 +37,7 @@
 
       return randomArray;
     },
+
     removeClass: function (elem, className) {
       if (elem) {
         elem.classList.remove(className);

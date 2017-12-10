@@ -5,16 +5,24 @@
   var similarListButtons = document.querySelector('.map__pins');
   var mainPin = document.querySelector('.map__pin--main');
 
+  var getNoticesArr = function (length) {
+    var notices = [];
+    for (var i = 0; i < length; i++) {
+      notices.push(window.data.getNotice(i));
+    }
+    return notices;
+  };
+
   mainPin.addEventListener('mouseup', function () {
     document.querySelector('.map').classList.remove('map--faded');
     document.querySelector('.notice__form').classList.remove('notice__form--disabled');
     var fragment = document.createDocumentFragment();
 
-
     for (var i = 0; i < NOTICE_QUANTITY; i++) {
-      var pin = window.Pin.render(window.data.getNoticesArr(NOTICE_QUANTITY)[i]);
+      var pin = window.pin.render(getNoticesArr(NOTICE_QUANTITY)[i]);
       fragment.appendChild(pin);
     }
+
     similarListButtons.appendChild(fragment);
   });
 })();

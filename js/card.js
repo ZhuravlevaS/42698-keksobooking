@@ -1,38 +1,31 @@
 'use strict';
 
 (function () {
-  var similarNoticeCard = document.querySelector('template').content.querySelector('article.map__card');
-  var ESC = 27;
+  var ESC_CODE = 27;
+
+  var noticeCard = document.querySelector('template').content.querySelector('article.map__card');
   var mapElement = document.querySelector('.map');
-  var buttonActive = mapElement.querySelector('.map__pin--active');
 
-  var renderFeature = function (arr, block) {
-    arr.forEach(function (featureItem) {
-      var li = document.createElement('li');
-      block.appendChild(li).classList.add('feature', 'feature--' + featureItem);
-    });
-  };
+  var renderFeature = function (featureItem, parent) {
+    var li = document.createElement('li');
 
-  var closeCardHandler = function (elem, parent) {
-    elem.addEventListener('click', function () {
-      mapElement.removeChild(parent);
-      window.utils.removeClass(buttonActive, 'map__pin--active');
-    });
+    li.classList.add('feature', 'feature--' + featureItem);
+    parent.appendChild(li);
   };
 
   var closeCardByKey = function (evt) {
-    if (evt.keyCode === ESC) {
+    if (evt.keyCode === ESC_CODE) {
       var card = mapElement.querySelector('.map__card');
 
       mapElement.removeChild(card);
-      window.utils.removeClass(buttonActive, 'map__pin--active');
+      window.pin.deactivatePin();
       document.removeEventListener('keydown', closeCardByKey);
     }
   };
 
-  window.Card = {
+  window.card = {
     render: function (notice) {
-      var noticeElementCard = similarNoticeCard.cloneNode(true);
+      var noticeElementCard = noticeCard.cloneNode(true);
 
       noticeElementCard.querySelector('h3').textContent = notice.offer.title;
       noticeElementCard.querySelector('p small').textContent = notice.offer.address;
@@ -45,23 +38,21 @@
       var popupFeature = noticeElementCard.querySelector('.popup__features');
       var buttonClose = noticeElementCard.querySelector('.popup__close');
 
-      renderFeature(notice.offer.features, popupFeature);
-      closeCardHandler(buttonClose, noticeElementCard);
+      var closeCardHandler = function () {
+        mapElement.removeChild(noticeElementCard);
+
+        window.pin.deactivatePin();
+      };
+
+      notice.offer.features.forEach(function (featureItem) {
+        renderFeature(featureItem, popupFeature);
+      });
+
+      buttonClose.addEventListener('click', closeCardHandler);
+
       document.addEventListener('keydown', closeCardByKey);
 
       return noticeElementCard;
-    },
-    CardParam: {
-      MIN_PRICE: 1000,
-      MAX_PRICE: 1000000,
-      MIN_ROOMS: 1,
-      MAX_ROOMS: 5,
-      MIN_GUESTS: 1,
-      MAX_GUESTS: 10,
-      TITLES: ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'],
-      TYPES_OF_APART: ['flat', 'house', 'bungalo'],
-      TIMES: ['12:00', '13:00', '14:00'],
-      FEATURES_OF_APART: ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner']
     }
   };
 })();
