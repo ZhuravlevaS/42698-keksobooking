@@ -19,7 +19,7 @@
       var card = mapElement.querySelector('.map__card');
 
       mapElement.removeChild(card);
-      window.pin.deactivatePin();
+      window.pin.deactivate();
       document.removeEventListener('keydown', closeCardByKey);
     }
   };
@@ -27,7 +27,7 @@
   var closeCardHandler = function (parent) {
     mapElement.removeChild(parent);
 
-    window.pin.deactivatePin();
+    window.pin.deactivate();
   };
 
   var render = function (card) {
@@ -58,15 +58,12 @@
   };
 
   window.card = {
-    renderCard: function (item) {
-      mapElement.insertBefore(render(item), mapFilter);
-    },
-    removeCard: function () {
+    render: function (item) {
       var card = mapElement.querySelector('.map__card');
       if (card) {
         mapElement.removeChild(card);
       }
-    }
-
+      mapElement.insertBefore(render(item), mapFilter);
+    },
   };
 })();

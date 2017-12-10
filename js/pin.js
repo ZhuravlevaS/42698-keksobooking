@@ -16,9 +16,8 @@
       return;
     }
 
-    window.card.removeCard();
-    window.card.renderCard(item);
-    window.pin.deactivatePin();
+    window.card.render(item);
+    window.pin.deactivate();
     btnClickHandler(target);
   };
 
@@ -35,9 +34,8 @@
       return noticeBtn;
     },
 
-    deactivatePin: function () {
-      var mapElement = document.querySelector('.map');
-      var buttonActive = mapElement.querySelector('.map__pin--active');
+    deactivate: function () {
+      var buttonActive = document.querySelector('.map__pin--active');
 
       window.utils.removeClass(buttonActive, 'map__pin--active');
     }
