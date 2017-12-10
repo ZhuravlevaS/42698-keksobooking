@@ -2,8 +2,6 @@
 
 (function () {
   var noticeButton = document.querySelector('template').content.querySelector('.map__pin');
-  var mapElement = document.querySelector('.map');
-  var mapFilter = mapElement.querySelector('.map__filters-container');
 
   var btnClickHandler = function (target) {
     if (target.tagName === 'IMG') {
@@ -14,13 +12,12 @@
   };
 
   var pinClickHandler = function (target, btn, item) {
-
     if (btn.classList.contains('map__pin--active')) {
       return;
     }
 
     window.card.removeCard();
-    mapElement.insertBefore(window.card.render(item), mapFilter);
+    window.card.renderCard(item);
     window.pin.deactivatePin();
     btnClickHandler(target);
   };
@@ -39,6 +36,7 @@
     },
 
     deactivatePin: function () {
+      var mapElement = document.querySelector('.map');
       var buttonActive = mapElement.querySelector('.map__pin--active');
 
       window.utils.removeClass(buttonActive, 'map__pin--active');
