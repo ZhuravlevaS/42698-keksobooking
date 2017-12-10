@@ -2,11 +2,13 @@
 
 (function () {
 
-  var renderAvatar = function (i) {
-    return i <= 9 ? '0' + i : i;
+  var getImageSource = function (i) {
+    var userNumber = i <= 9 ? '0' + i : i;
+
+    return 'img/avatars/user' + userNumber + '.png';
   };
 
-  var NoticeParam = {
+  var Params = {
     MIN_X: 300,
     MAX_X: 900,
     MIN_Y: 100,
@@ -26,23 +28,23 @@
 
   window.data = {
     getNotice: function (i) {
-      var titleArr = window.utils.shuffleArray(NoticeParam.TITLES);
-      var locationX = window.utils.getRandomNum(NoticeParam.MIN_X, NoticeParam.MAX_X);
-      var locationY = window.utils.getRandomNum(NoticeParam.MIN_Y, NoticeParam.MAX_Y);
+      var titleArr = window.utils.shuffleArray(Params.TITLES);
+      var locationX = window.utils.getRandomNum(Params.MIN_X, Params.MAX_X);
+      var locationY = window.utils.getRandomNum(Params.MIN_Y, Params.MAX_Y);
 
       var notice = {
         author: {
-          avatar: 'img/avatars/user' + renderAvatar(i + 1) + '.png'
+          avatar: getImageSource(i + 1)
         },
         offer: {
           title: titleArr[i],
           address: locationX + ', ' + locationY,
-          price: window.utils.getRandomNum(NoticeParam.MIN_PRICE, NoticeParam.MAX_PRICE),
-          type: NoticeParam.TYPES_OF_APART[window.utils.getRandomNum(0, NoticeParam.TYPES_OF_APART.length - 1)],
-          rooms: window.utils.getRandomNum(NoticeParam.MIN_ROOMS, NoticeParam.MAX_ROOMS),
-          guests: window.utils.getRandomNum(NoticeParam.MIN_GUESTS, NoticeParam.MAX_GUESTS),
-          time: NoticeParam.TIMES[window.utils.getRandomNum(0, NoticeParam.TIMES.length - 1)],
-          features: window.utils.getRandomArr(NoticeParam.FEATURES_OF_APART, window.utils.getRandomArrLength(NoticeParam.FEATURES_OF_APART)),
+          price: window.utils.getRandomNum(Params.MIN_PRICE, Params.MAX_PRICE),
+          type: Params.TYPES_OF_APART[window.utils.getRandomNum(0, Params.TYPES_OF_APART.length - 1)],
+          rooms: window.utils.getRandomNum(Params.MIN_ROOMS, Params.MAX_ROOMS),
+          guests: window.utils.getRandomNum(Params.MIN_GUESTS, Params.MAX_GUESTS),
+          time: Params.TIMES[window.utils.getRandomNum(0, Params.TIMES.length - 1)],
+          features: window.utils.getRandomArr(Params.FEATURES_OF_APART, window.utils.getRandomArrLength(Params.FEATURES_OF_APART)),
           description: '',
           photos: []
         },

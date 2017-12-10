@@ -23,6 +23,12 @@
     }
   };
 
+  var closeCardHandler = function (parent) {
+    mapElement.removeChild(parent);
+
+    window.pin.deactivatePin();
+  };
+
   window.card = {
     render: function (notice) {
       var noticeElementCard = noticeCard.cloneNode(true);
@@ -38,17 +44,13 @@
       var popupFeature = noticeElementCard.querySelector('.popup__features');
       var buttonClose = noticeElementCard.querySelector('.popup__close');
 
-      var closeCardHandler = function () {
-        mapElement.removeChild(noticeElementCard);
-
-        window.pin.deactivatePin();
-      };
-
       notice.offer.features.forEach(function (featureItem) {
         renderFeature(featureItem, popupFeature);
       });
 
-      buttonClose.addEventListener('click', closeCardHandler);
+      buttonClose.addEventListener('click', function () {
+        closeCardHandler(noticeElementCard);
+      });
 
       document.addEventListener('keydown', closeCardByKey);
 

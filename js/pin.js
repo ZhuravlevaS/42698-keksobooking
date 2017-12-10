@@ -5,12 +5,6 @@
   var mapElement = document.querySelector('.map');
   var mapFilter = mapElement.querySelector('.map__filters-container');
 
-  var removeElementFromMap = function (elem) {
-    if (elem) {
-      mapElement.removeChild(elem);
-    }
-  };
-
   var btnClickHandler = function (target) {
     if (target.tagName === 'IMG') {
       target.parentElement.classList.add('map__pin--active');
@@ -20,13 +14,12 @@
   };
 
   var pinClickHandler = function (target, btn, item) {
-    var card = mapElement.querySelector('.map__card');
 
     if (btn.classList.contains('map__pin--active')) {
       return;
     }
 
-    removeElementFromMap(card);
+    window.card.removeCard();
     mapElement.insertBefore(window.card.render(item), mapFilter);
     window.pin.deactivatePin();
     btnClickHandler(target);
@@ -34,15 +27,15 @@
 
   window.pin = {
     render: function (notice) {
-      var noticeElementBtn = noticeButton.cloneNode(true);
+      var noticeBtn = noticeButton.cloneNode(true);
 
-      noticeElementBtn.querySelector('.map__pin img').setAttribute('src', notice.author.avatar);
-      noticeElementBtn.style.left = notice.location.x + 'px';
-      noticeElementBtn.style.top = notice.location.y + 'px';
-      noticeElementBtn.addEventListener('click', function (evt) {
-        pinClickHandler(evt.target, noticeElementBtn, notice);
+      noticeBtn.querySelector('.map__pin img').setAttribute('src', notice.author.avatar);
+      noticeBtn.style.left = notice.location.x + 'px';
+      noticeBtn.style.top = notice.location.y + 'px';
+      noticeBtn.addEventListener('click', function (evt) {
+        pinClickHandler(evt.target, noticeBtn, notice);
       });
-      return noticeElementBtn;
+      return noticeBtn;
     },
 
     deactivatePin: function () {
