@@ -11,7 +11,7 @@
 
   var ERROR_STYLE = 'border: 1px solid #ff6547';
 
-  // adressInput.value = window.form.getMainPinCoords();
+  window.pin.getMainPinCoords();
 
   var typeApartsParams = {
     bungalo: 0,
@@ -63,15 +63,4 @@
       elem.disabled = !roomsActiveElem[evt.target.value].includes(elem.value);
     });
   });
-
-  window.form = {
-    getMainPinCoords: function () {
-      var mainPin = document.querySelector('.map__pin--main');
-      var adressInput = form.querySelector('#address');
-      var topCoordOfAddress = parseInt((getComputedStyle(mainPin).top), 10);
-      var leftCoordOfAddress = parseInt((getComputedStyle(mainPin).left), 10);
-
-      adressInput.value = topCoordOfAddress + ', ' + leftCoordOfAddress;
-    }
-  };
 })();
