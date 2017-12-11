@@ -9,13 +9,10 @@
   var typeOfApartSelect = form.querySelector('#type');
   var roomNumberSelect = form.querySelector('#room_number');
   var capacitySelect = form.querySelector('#capacity');
-  var mainPin = document.querySelector('.map__pin--main');
-  var topCoordOfAddress = parseInt((getComputedStyle(mainPin).top), 10);
-  var leftCoordOfAddress = parseInt((getComputedStyle(mainPin).left), 10);
 
   var ERROR_STYLE = 'border: 1px solid #ff6547';
 
-  adressInput.value = topCoordOfAddress + ', ' + leftCoordOfAddress;
+  adressInput.value = window.map.getMainPinCoords();
 
   var typeApartsParams = {
     bungalo: 0,
