@@ -40,8 +40,8 @@
     evt.preventDefault();
 
     var startCoords = {
-      x: parseInt((getComputedStyle(evt.target.parentElement).left), 10),
-      y: parseInt((getComputedStyle(evt.target.parentElement).top), 10)
+      x: evt.clientX,
+      y: evt.clientY
     };
 
     var onMouseMove = function (moveEvt) {
@@ -52,34 +52,38 @@
         y: startCoords.y - moveEvt.clientY
       };
 
+      var limitCoords = {
+        min: 100,
+        max: 500
+      };
+
       startCoords = {
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
 
-      mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
       mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+      mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+
+      if (parseInt((mainPin.style.top), 10) < 100) {
+        mainPin.style.top = limitCoords.min + 'px';
+      } if (parseInt((mainPin.style.top), 10) > 500) {
+        mainPin.style.top = limitCoords.max + 'px';
+      }
     };
+
 
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
+      window.form.getMainPinCoords();
     };
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
-
-  window.map = {
-    getMainPinCoords: function () {
-      var topCoordOfAddress = parseInt((getComputedStyle(mainPin).top), 10);
-      var leftCoordOfAddress = parseInt((getComputedStyle(mainPin).left), 10);
-
-      var coordinates = topCoordOfAddress + ', ' + leftCoordOfAddress;
-      return coordinates;
-    }
-  };
+  
 })();
 
