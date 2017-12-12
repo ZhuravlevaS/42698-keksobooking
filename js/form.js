@@ -2,20 +2,15 @@
 
 (function () {
   var form = document.querySelector('.notice__form');
-  var adressInput = form.querySelector('#address');
   var priceInput = form.querySelector('#price');
   var timeInSelect = form.querySelector('#timein');
   var timeOutSelect = form.querySelector('#timeout');
   var typeOfApartSelect = form.querySelector('#type');
   var roomNumberSelect = form.querySelector('#room_number');
   var capacitySelect = form.querySelector('#capacity');
-  var mainPin = document.querySelector('.map__pin--main');
-  var topCoordOfAddress = parseInt((getComputedStyle(mainPin).top), 10);
-  var leftCoordOfAddress = parseInt((getComputedStyle(mainPin).left), 10);
+  var adressInput = document.querySelector('#address');
 
   var ERROR_STYLE = 'border: 1px solid #ff6547';
-
-  adressInput.value = topCoordOfAddress + ', ' + leftCoordOfAddress;
 
   var typeApartsParams = {
     bungalo: 0,
@@ -67,4 +62,10 @@
       elem.disabled = !roomsActiveElem[evt.target.value].includes(elem.value);
     });
   });
+
+  window.form = {
+    setAdress: function (left, top) {
+      adressInput.value = left + ', ' + top;
+    }
+  };
 })();

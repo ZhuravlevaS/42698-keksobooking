@@ -38,6 +38,17 @@
       var buttonActive = document.querySelector('.map__pin--active');
 
       window.utils.removeClass(buttonActive, 'map__pin--active');
+    },
+    getPinCoords: function (pin) {
+      var top = parseInt((getComputedStyle(pin).top), 10);
+      var left = parseInt((getComputedStyle(pin).left), 10);
+
+      var coords = {
+        left: left,
+        top: top
+      };
+
+      return coords;
     }
   };
 })();
