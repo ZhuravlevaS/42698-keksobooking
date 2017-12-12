@@ -4,14 +4,14 @@
   var NOTICE_QUANTITY = 8;
 
   var MAIN_PIN_PARAMS = {
-    width: 65, // px
-    height: 65, // px
+    width: 66, // px
+    height: 66, // px
     heightMark: 22 // px
   };
 
   var LIMITS_COORDS = {
-    minY: 100 + MAIN_PIN_PARAMS.height / 2,
-    maxY: 500 - MAIN_PIN_PARAMS.height / 2,
+    minY: 100 - MAIN_PIN_PARAMS.height / 2 - MAIN_PIN_PARAMS.heightMark,
+    maxY: 500 - MAIN_PIN_PARAMS.height / 2 - MAIN_PIN_PARAMS.heightMark,
     minX: 0 + MAIN_PIN_PARAMS.width / 2,
     maxX: 1200 - MAIN_PIN_PARAMS.width / 2
   };
@@ -94,7 +94,7 @@
       mainPin.style.left = coordLeft + 'px';
       mainPin.style.top = coordTop + 'px';
 
-      window.form.setAdress(window.pin.getMainPinCoords().left, (window.pin.getMainPinCoords().top + MAIN_PIN_PARAMS.height / 2 + MAIN_PIN_PARAMS.heightMark));
+      window.form.setAdress(window.pin.getMainPinCoords().left, window.pin.getMainPinCoords().top + MAIN_PIN_PARAMS.height / 2 + MAIN_PIN_PARAMS.heightMark);
     };
 
 
