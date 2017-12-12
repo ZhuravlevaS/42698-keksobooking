@@ -64,8 +64,8 @@
   });
 
   window.form = {
-    putAdressValue: function () {
-      adressInput.value = window.pin.getMainPinCoords();
+    setAdress: function () {
+      adressInput.value = window.pin.getMainPinCoords().left + ', ' + window.pin.getMainPinCoords().top;
     }
   };
 })();

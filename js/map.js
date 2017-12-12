@@ -67,36 +67,33 @@
         y: moveEvt.clientY
       };
 
-      var height = mainPin.offsetTop - shift.y;
-      var width = mainPin.offsetLeft - shift.x;
+      var coordTop = mainPin.offsetTop - shift.y;
+      var coordLeft = mainPin.offsetLeft - shift.x;
 
       var limits = {
-        minY: LIMITS_COORDS.minY + MAIN_PIN_PARAMS.height,
-        maxY: LIMITS_COORDS.maxY - MAIN_PIN_PARAMS.height,
+        minY: LIMITS_COORDS.minY - MAIN_PIN_PARAMS.height,
+        maxY: LIMITS_COORDS.maxY + MAIN_PIN_PARAMS.height,
         minX: LIMITS_COORDS.minX + MAIN_PIN_PARAMS.width / 2,
         maxX: LIMITS_COORDS.maxX - MAIN_PIN_PARAMS.width / 2,
       };
 
-      var top = (mainPin.offsetTop - shift.y) + 'px';
-      var left = (mainPin.offsetLeft - shift.x) + 'px';
-
-      if (height < limits.minY) {
-        top = limits.minY + 'px';
+      if (coordTop < limits.minY) {
+        coordTop = limits.minY + 'px';
       } else
-      if (height > limits.maxY) {
-        top = limits.maxY + 'px';
+      if (coordTop > limits.maxY) {
+        coordTop = limits.maxY + 'px';
       } else
-      if (width < limits.minX) {
-        left = limits.minX + 'px';
+      if (coordLeft < limits.minX) {
+        coordLeft = limits.minX + 'px';
       } else
-      if (width > limits.maxX) {
-        left = limits.maxX + 'px';
+      if (coordLeft > limits.maxX) {
+        coordLeft = limits.maxX + 'px';
       }
 
-      mainPin.style.left = left;
-      mainPin.style.top = top;
+      mainPin.style.left = coordLeft + 'px';
+      mainPin.style.top = coordTop + 'px';
 
-      window.form.putAdressValue();
+      window.form.setAdress();
     };
 
 

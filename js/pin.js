@@ -44,7 +44,11 @@
       var topCoordOfAddress = parseInt((getComputedStyle(mainPin).top), 10);
       var leftCoordOfAddress = parseInt((getComputedStyle(mainPin).left), 10);
 
-      var coords = leftCoordOfAddress + ', ' + topCoordOfAddress;
+      var coords = {
+        left: leftCoordOfAddress,
+        top: topCoordOfAddress
+      };
+
       return coords;
     }
   };
