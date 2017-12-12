@@ -3,16 +3,17 @@
 (function () {
   var NOTICE_QUANTITY = 8;
 
-  var LIMITS_COORDS = {
-    minY: 100,
-    maxY: 500,
-    minX: 0,
-    maxX: 1200
-  };
-
   var MAIN_PIN_PARAMS = {
     width: 65, // px
-    height: 65 // px
+    height: 65, // px
+    heightMark: 22 // px
+  };
+
+  var LIMITS_COORDS = {
+    minY: 100 + MAIN_PIN_PARAMS.height / 2,
+    maxY: 500 - MAIN_PIN_PARAMS.height / 2,
+    minX: 0 + MAIN_PIN_PARAMS.width / 2,
+    maxX: 1200 - MAIN_PIN_PARAMS.width / 2
   };
 
   var similarListButtons = document.querySelector('.map__pins');
@@ -71,10 +72,10 @@
       var coordLeft = mainPin.offsetLeft - shift.x;
 
       var limits = {
-        minY: LIMITS_COORDS.minY - MAIN_PIN_PARAMS.height,
-        maxY: LIMITS_COORDS.maxY + MAIN_PIN_PARAMS.height,
-        minX: LIMITS_COORDS.minX + MAIN_PIN_PARAMS.width / 2,
-        maxX: LIMITS_COORDS.maxX - MAIN_PIN_PARAMS.width / 2,
+        minY: LIMITS_COORDS.minY,
+        maxY: LIMITS_COORDS.maxY,
+        minX: LIMITS_COORDS.minX,
+        maxX: LIMITS_COORDS.maxX,
       };
 
       if (coordTop < limits.minY) {
@@ -93,7 +94,7 @@
       mainPin.style.left = coordLeft + 'px';
       mainPin.style.top = coordTop + 'px';
 
-      window.form.setAdress();
+      window.form.setAdress(window.pin.getMainPinCoords().left, (window.pin.getMainPinCoords().top + MAIN_PIN_PARAMS.height / 2 + MAIN_PIN_PARAMS.heightMark));
     };
 
 
