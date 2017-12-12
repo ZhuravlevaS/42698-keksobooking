@@ -39,14 +39,13 @@
 
       window.utils.removeClass(buttonActive, 'map__pin--active');
     },
-    getMainPinCoords: function () {
-      var mainPin = document.querySelector('.map__pin--main');
-      var topCoordOfAddress = parseInt((getComputedStyle(mainPin).top), 10);
-      var leftCoordOfAddress = parseInt((getComputedStyle(mainPin).left), 10);
+    getPinCoords: function (pin) {
+      var top = parseInt((getComputedStyle(pin).top), 10);
+      var left = parseInt((getComputedStyle(pin).left), 10);
 
       var coords = {
-        left: leftCoordOfAddress,
-        top: topCoordOfAddress
+        left: left,
+        top: top
       };
 
       return coords;

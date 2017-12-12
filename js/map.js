@@ -79,22 +79,22 @@
       };
 
       if (coordTop < limits.minY) {
-        coordTop = limits.minY + 'px';
+        coordTop = limits.minY;
       } else
       if (coordTop > limits.maxY) {
-        coordTop = limits.maxY + 'px';
+        coordTop = limits.maxY;
       } else
       if (coordLeft < limits.minX) {
-        coordLeft = limits.minX + 'px';
+        coordLeft = limits.minX;
       } else
       if (coordLeft > limits.maxX) {
-        coordLeft = limits.maxX + 'px';
+        coordLeft = limits.maxX;
       }
 
       mainPin.style.left = coordLeft + 'px';
       mainPin.style.top = coordTop + 'px';
 
-      window.form.setAdress(window.pin.getMainPinCoords().left, window.pin.getMainPinCoords().top + MAIN_PIN_PARAMS.height / 2 + MAIN_PIN_PARAMS.heightMark);
+      window.form.setAdress(coordLeft, coordTop + MAIN_PIN_PARAMS.height / 2 + MAIN_PIN_PARAMS.heightMark);
     };
 
 
