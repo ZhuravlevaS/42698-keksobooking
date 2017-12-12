@@ -77,21 +77,24 @@
         maxX: LIMITS_COORDS.maxX - MAIN_PIN_PARAMS.width / 2,
       };
 
+      var top = (mainPin.offsetTop - shift.y) + 'px';
+      var left = (mainPin.offsetLeft - shift.x) + 'px';
+
       if (height < limits.minY) {
-        mainPin.style.top = limits.minY + 'px';
+        top = limits.minY + 'px';
       } else
       if (height > limits.maxY) {
-        mainPin.style.top = limits.maxY + 'px';
+        top = limits.maxY + 'px';
       } else
       if (width < limits.minX) {
-        mainPin.style.left = limits.minX + 'px';
+        left = limits.minX + 'px';
       } else
       if (width > limits.maxX) {
-        mainPin.style.left = limits.maxX + 'px';
-      } else {
-        mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
-        mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+        left = limits.maxX + 'px';
       }
+
+      mainPin.style.left = left;
+      mainPin.style.top = top;
 
       window.form.putAdressValue();
     };
