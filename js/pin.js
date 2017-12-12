@@ -41,11 +41,11 @@
     },
     getMainPinCoords: function () {
       var mainPin = document.querySelector('.map__pin--main');
-      var adressInput = document.querySelector('#address');
       var topCoordOfAddress = parseInt((getComputedStyle(mainPin).top), 10);
       var leftCoordOfAddress = parseInt((getComputedStyle(mainPin).left), 10);
 
-      adressInput.value = topCoordOfAddress + ', ' + leftCoordOfAddress;
+      var coords = leftCoordOfAddress + ', ' + topCoordOfAddress;
+      return coords;
     }
   };
 })();

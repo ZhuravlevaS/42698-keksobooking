@@ -69,28 +69,31 @@
 
       var height = mainPin.offsetTop - shift.y;
       var width = mainPin.offsetLeft - shift.x;
-      var minY = LIMITS_COORDS.minY + MAIN_PIN_PARAMS.height;
-      var maxY = LIMITS_COORDS.maxY - MAIN_PIN_PARAMS.height;
-      var minX = LIMITS_COORDS.minX + MAIN_PIN_PARAMS.width / 2;
-      var maxX = LIMITS_COORDS.maxX - MAIN_PIN_PARAMS.width / 2;
 
-      if (height < minY) {
-        mainPin.style.top = minY + 'px';
+      var limits = {
+        minY: LIMITS_COORDS.minY + MAIN_PIN_PARAMS.height,
+        maxY: LIMITS_COORDS.maxY - MAIN_PIN_PARAMS.height,
+        minX: LIMITS_COORDS.minX + MAIN_PIN_PARAMS.width / 2,
+        maxX: LIMITS_COORDS.maxX - MAIN_PIN_PARAMS.width / 2,
+      };
+
+      if (height < limits.minY) {
+        mainPin.style.top = limits.minY + 'px';
       } else
-      if (height > maxY) {
-        mainPin.style.top = maxY + 'px';
+      if (height > limits.maxY) {
+        mainPin.style.top = limits.maxY + 'px';
       } else
-      if (width < minX) {
-        mainPin.style.left = minX + 'px';
+      if (width < limits.minX) {
+        mainPin.style.left = limits.minX + 'px';
       } else
-      if (width > maxX) {
-        mainPin.style.left = maxX + 'px';
+      if (width > limits.maxX) {
+        mainPin.style.left = limits.maxX + 'px';
+      } else {
+        mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+        mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
       }
 
-      mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
-      mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
-
-      window.pin.getMainPinCoords();
+      window.form.putAdressValue();
     };
 
 
