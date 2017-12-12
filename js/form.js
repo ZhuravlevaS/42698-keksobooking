@@ -8,11 +8,9 @@
   var typeOfApartSelect = form.querySelector('#type');
   var roomNumberSelect = form.querySelector('#room_number');
   var capacitySelect = form.querySelector('#capacity');
-  var adressInput = form.querySelector('#address');
+  var adressInput = document.querySelector('#address');
 
   var ERROR_STYLE = 'border: 1px solid #ff6547';
-
-  window.form.putAdressValue();
 
   var typeApartsParams = {
     bungalo: 0,
