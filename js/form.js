@@ -11,57 +11,48 @@
   var adressInput = document.querySelector('#address');
 
   var ERROR_STYLE = 'border: 1px solid #ff6547';
+  var TIME_VALUES = ['12:00', '13:00', '14:00'];
+  var APART_TYPES = ['bungalo', 'flat', 'house', 'palace'];
+  var PRICES = ['0', '1000', '5000', '10000'];
+  var ROOMS = ['1', '2', '3', '100'];
+  var GUESTS = ['1', '2', '3', '0'];
 
-  var typeApartsParams = {
-    bungalo: 0,
-    flat: 1000,
-    house: 5000,
-    palace: 10000
-  };
 
   var roomsActiveElem = {
     '1': ['1'],
     '2': ['1', '2'],
     '3': ['1', '2', '3'],
-    '100': ['0']
-  };
-
-  var roomsValue = {
-    '1': '1',
-    '2': '2',
-    '3': '3',
-    '100': '0'
+    '0': ['0']
   };
 
   form.addEventListener('invalid', function (evt) {
     evt.target.style = ERROR_STYLE;
   }, true);
 
-  var syncValue = function (elem, evt) {
-    elem.value = evt.target.value;
+  var syncValue = function (element, value) {
+    element.value = value;
   };
 
-  timeInSelect.addEventListener('change', function (evt) {
-    syncValue(timeOutSelect, evt);
-  });
+  var syncValueWithMin = function (element, value) {
+    element.min = value;
+  };
 
-  timeOutSelect.addEventListener('change', function (evt) {
-    syncValue(timeInSelect, evt);
-  });
-
-  typeOfApartSelect.addEventListener('change', function (evt) {
-    priceInput.setAttribute('min', typeApartsParams[evt.target.value]);
-  });
-
-  roomNumberSelect.addEventListener('change', function (evt) {
-    var capacityArr = capacitySelect.querySelectorAll('option');
-
-    capacitySelect.value = roomsValue[evt.target.value];
-
-    capacityArr.forEach(function (elem) {
-      elem.disabled = !roomsActiveElem[evt.target.value].includes(elem.value);
+  var disableSelect = function (element, value) {
+    var elementArr = element.querySelectorAll('option');
+    elementArr.forEach(function (elem) {
+      elem.disabled = !roomsActiveElem[value].includes(elem.value);
     });
-  });
+  };
+
+  var syncValueWithDisabled = function (element, value) {
+    element.value = value;
+    disableSelect(element, value);
+  };
+
+  window.synchronizeFields(timeInSelect, timeOutSelect, TIME_VALUES, TIME_VALUES, syncValue);
+  window.synchronizeFields(timeOutSelect, timeInSelect, TIME_VALUES, TIME_VALUES, syncValue);
+  window.synchronizeFields(typeOfApartSelect, priceInput, APART_TYPES, PRICES, syncValueWithMin);
+  window.synchronizeFields(roomNumberSelect, capacitySelect, ROOMS, GUESTS, syncValueWithDisabled);
 
   window.form = {
     setAdress: function (left, top) {
