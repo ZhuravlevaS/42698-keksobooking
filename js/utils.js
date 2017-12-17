@@ -42,6 +42,6 @@
       if (elem) {
         elem.classList.remove(className);
       }
-    }
+    },
   };
 })();

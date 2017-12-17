@@ -32,17 +32,17 @@
 
   var render = function (card) {
     var noticeElementCard = noticeCard.cloneNode(true);
+    var popupFeature = noticeElementCard.querySelector('.popup__features');
+    var buttonClose = noticeElementCard.querySelector('.popup__close');
 
     noticeElementCard.querySelector('h3').textContent = card.offer.title;
     noticeElementCard.querySelector('p small').textContent = card.offer.address;
     noticeElementCard.querySelector('.popup__price').innerHTML = card.offer.price + ' &#x20bd;/ночь';
     noticeElementCard.querySelector('h4').textContent = card.offer.type;
     noticeElementCard.querySelector('h4 + p').textContent = card.offer.rooms + ' комнаты  для ' + card.offer.guests + ' гостей';
-    noticeElementCard.querySelector('h4 + p + p').textContent = 'Заезд после ' + card.offer.time + ', выезд до ' + card.offer.time;
+    noticeElementCard.querySelector('h4 + p + p').textContent = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout;
     noticeElementCard.querySelector('.popup__avatar').setAttribute('src', card.author.avatar);
-
-    var popupFeature = noticeElementCard.querySelector('.popup__features');
-    var buttonClose = noticeElementCard.querySelector('.popup__close');
+    noticeElementCard.querySelector('.popup__features + p').textContent = card.offer.description;
 
     card.offer.features.forEach(function (featureItem) {
       renderFeature(featureItem, popupFeature);
