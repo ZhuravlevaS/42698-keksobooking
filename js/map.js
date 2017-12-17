@@ -17,17 +17,8 @@
   var similarListButtons = document.querySelector('.map__pins');
   var mainPin = document.querySelector('.map__pin--main');
 
-  // var getNoticesArr = function (length) {
-  //   var notices = [];
-  //   for (var i = 0; i < length; i++) {
-  //     notices.push(window.data.getNotice(i));
-  //   }
-  //   return notices;
-  // };
-
   var drawPin = function (pins) {
     var fragment = document.createDocumentFragment();
-    // var noticesArr = getNoticesArr(NOTICE_QUANTITY);
 
     for (var i = 0; i < pins.length; i++) {
       var pin = window.pin.render(pins[i]);

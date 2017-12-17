@@ -12,6 +12,8 @@
         onLoad(xhr.response);
       } else if (xhr.status === 404) {
         onError('Данные не найдены');
+      } else {
+        onError(xhr.response);
       }
     });
     xhr.addEventListener('error', function () {

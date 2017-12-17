@@ -28,23 +28,34 @@
   var validateAdress = function () {
     if (adressInput.value === '') {
       adressInput.style = ERROR_STYLE;
-      return;
+      return true;
     }
+
+    return false;
   };
 
   form.addEventListener('invalid', function (evt) {
     evt.target.style = ERROR_STYLE;
-    validateAdress();
   }, true);
 
   form.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    validateAdress();
+
+    if (validateAdress()) {
+      return;
+    }
+
     window.backend.save(new FormData(form), formReset, window.backend.errorHandler);
   });
 
   var formReset = function () {
+    var allRequired = form.querySelectorAll('input[required]');
+
     form.reset();
+    priceInput.min = '0';
+    allRequired.forEach(function (elem) {
+      elem.style = '';
+    });
   };
 
   var syncValue = function (element, value) {
@@ -61,6 +72,7 @@
       elem.disabled = !roomsActiveElem[value].includes(elem.value);
     });
   };
+  disableSelect(capacitySelect, capacitySelect.value);
 
   var syncValueWithDisabled = function (element, value) {
     element.value = value;
