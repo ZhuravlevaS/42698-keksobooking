@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var NOTICE_QUANTITY = 8;
-
   var MAIN_PIN_PARAMS = {
     width: 66, // px
     height: 66, // px
@@ -19,20 +17,20 @@
   var similarListButtons = document.querySelector('.map__pins');
   var mainPin = document.querySelector('.map__pin--main');
 
-  var getNoticesArr = function (length) {
-    var notices = [];
-    for (var i = 0; i < length; i++) {
-      notices.push(window.data.getNotice(i));
-    }
-    return notices;
-  };
+  // var getNoticesArr = function (length) {
+  //   var notices = [];
+  //   for (var i = 0; i < length; i++) {
+  //     notices.push(window.data.getNotice(i));
+  //   }
+  //   return notices;
+  // };
 
-  var drawPin = function () {
+  var drawPin = function (pins) {
     var fragment = document.createDocumentFragment();
-    var noticesArr = getNoticesArr(NOTICE_QUANTITY);
+    // var noticesArr = getNoticesArr(NOTICE_QUANTITY);
 
-    for (var i = 0; i < NOTICE_QUANTITY; i++) {
-      var pin = window.pin.render(noticesArr[i]);
+    for (var i = 0; i < pins.length; i++) {
+      var pin = window.pin.render(pins[i]);
       fragment.appendChild(pin);
     }
 
@@ -43,7 +41,7 @@
   var pinMouseupHandler = function () {
     document.querySelector('.map').classList.remove('map--faded');
     document.querySelector('.notice__form').classList.remove('notice__form--disabled');
-    drawPin();
+    window.backend.load(drawPin, window.utils.errorHandler);
     mainPin.removeEventListener('click', pinMouseupHandler);
   };
 

@@ -29,6 +29,17 @@
     evt.target.style = ERROR_STYLE;
   }, true);
 
+  form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.backend.save(new FormData(form), function () {
+      formReset();
+    }, window.utils.errorHandler);
+  });
+
+  var formReset = function () {
+    form.reset();
+  };
+
   var syncValue = function (element, value) {
     element.value = value;
   };
