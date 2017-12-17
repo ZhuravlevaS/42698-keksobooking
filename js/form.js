@@ -25,15 +25,22 @@
     '0': ['0']
   };
 
+  var validateAdress = function () {
+    if (adressInput.value === '') {
+      adressInput.style = ERROR_STYLE;
+      return;
+    }
+  };
+
   form.addEventListener('invalid', function (evt) {
     evt.target.style = ERROR_STYLE;
+    validateAdress();
   }, true);
 
   form.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.save(new FormData(form), function () {
-      formReset();
-    }, window.utils.errorHandler);
+    validateAdress();
+    window.backend.save(new FormData(form), formReset, window.backend.errorHandler);
   });
 
   var formReset = function () {

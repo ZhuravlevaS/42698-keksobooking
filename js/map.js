@@ -41,7 +41,7 @@
   var pinMouseupHandler = function () {
     document.querySelector('.map').classList.remove('map--faded');
     document.querySelector('.notice__form').classList.remove('notice__form--disabled');
-    window.backend.load(drawPin, window.utils.errorHandler);
+    window.backend.load(drawPin, window.backend.errorHandler);
     mainPin.removeEventListener('click', pinMouseupHandler);
   };
 
