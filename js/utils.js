@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  var DEBOUNCE_INTERVAL = 500; // ms
+  var lastTimeout = null;
+
   window.utils = {
     getRandomNum: function (min, max) {
       var randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -43,5 +46,12 @@
         elem.classList.remove(className);
       }
     },
+
+    debounce: function (fun) {
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(fun, DEBOUNCE_INTERVAL);
+    }
   };
 })();

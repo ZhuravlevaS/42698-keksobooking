@@ -24,7 +24,6 @@
     });
 
     xhr.timeout = 10000; // 10s
-
     return xhr;
   };
 
