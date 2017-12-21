@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var HOUSING = 8; // строка в имени 'housing-'
-
   var PriceParams = {
     LOW: 10000,
     HIGH: 50000
@@ -40,26 +38,26 @@
     });
   };
 
-  window.filter = {
-    filterData: function (arr) {
-      var filteredArray = arr;
-      var selects = filterdForm.querySelectorAll('.map__filter');
-      var checkboxes = filterdForm.querySelectorAll('input:checked');
 
-      selects.forEach(function (select) {
-        if (select.value !== 'any') {
-          var name = select.getAttribute('name').slice(HOUSING);
-          filteredArray = name === 'price' ?
-            filterByPrice(filteredArray, select.value) :
-            filterByValue(filteredArray, name, select.value);
-        }
-      });
+  window.filterData = function (arr) {
+    var filteredArray = arr;
+    var selects = filterdForm.querySelectorAll('.map__filter');
+    var checkboxes = filterdForm.querySelectorAll('input:checked');
 
-      checkboxes.forEach(function (checkbox) {
-        filteredArray = filterByFeature(filteredArray, checkbox.value);
-      });
+    selects = Array.from(selects).filter(function (select) {
+      return select.value !== 'any';
+    });
 
-      return filteredArray;
-    }
+    selects.forEach(function (select) {
+      var name = select.getAttribute('name').replace('housing-', '');
+      filteredArray = name === 'price' ?
+        filterByPrice(filteredArray, select.value) :
+        filterByValue(filteredArray, name, select.value);
+    });
+
+    checkboxes.forEach(function (checkbox) {
+      filteredArray = filterByFeature(filteredArray, checkbox.value);
+    });
+    return filteredArray;
   };
 })();
