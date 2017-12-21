@@ -114,7 +114,7 @@
       mainPin.style.left = coordLeft + 'px';
       mainPin.style.top = coordTop + 'px';
 
-      window.form.setAdress(coordLeft, coordTop + MAIN_PIN_PARAMS.height / 2 + MAIN_PIN_PARAMS.heightMark);
+      window.form.setAdress(coordLeft, coordTop + MainPinParams.HEIGHT / 2 + MainPinParams.HEIGHT_MARK);
     };
 
 
