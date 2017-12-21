@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var MAX_PIN = 5;
+
   var MAIN_PIN_PARAMS = {
     width: 66, // px
     height: 66, // px
@@ -16,24 +18,53 @@
 
   var similarListButtons = document.querySelector('.map__pins');
   var mainPin = document.querySelector('.map__pin--main');
+  var filterdForm = document.querySelector('.map__filters');
+  var serverData = null;
 
-  var drawPin = function (pins) {
-    var fragment = document.createDocumentFragment();
+
+  var cleanPins = function () {
+    var mapPin = document.querySelector('.map__pins');
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 
     for (var i = 0; i < pins.length; i++) {
-      var pin = window.pin.render(pins[i]);
-      fragment.appendChild(pin);
+      mapPin.removeChild(pins[i]);
+    }
+  };
+
+  var drawFilteredPins = function () {
+    cleanPins();
+    window.card.removeCard();
+    var data = window.filterData(serverData);
+
+    drawPin(data);
+  };
+
+  filterdForm.addEventListener('change', function () {
+    window.utils.debounce(drawFilteredPins);
+  });
+
+  var drawPin = function (pins) {
+    if (!serverData) {
+      serverData = pins;
     }
 
-    similarListButtons.appendChild(fragment);
+    var fragment = document.createDocumentFragment();
 
+    var slicedPins = (pins.length > MAX_PIN) ? pins.slice(0, MAX_PIN) : pins;
+
+    slicedPins.forEach(function (pin) {
+      var pinElem = window.pin.render(pin);
+      fragment.appendChild(pinElem);
+    });
+
+    similarListButtons.appendChild(fragment);
   };
 
   var pinMouseupHandler = function () {
     document.querySelector('.map').classList.remove('map--faded');
     document.querySelector('.notice__form').classList.remove('notice__form--disabled');
     window.backend.load(drawPin, window.backend.errorHandler);
-    mainPin.removeEventListener('click', pinMouseupHandler);
+    mainPin.removeEventListener('mouseup', pinMouseupHandler);
   };
 
   mainPin.addEventListener('mousedown', function (evt) {
@@ -98,6 +129,5 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  mainPin.addEventListener('click', pinMouseupHandler);
+  mainPin.addEventListener('mouseup', pinMouseupHandler);
 })();
-

@@ -24,7 +24,6 @@
   window.pin = {
     render: function (notice) {
       var noticeBtn = noticeButton.cloneNode(true);
-
       noticeBtn.querySelector('.map__pin img').setAttribute('src', notice.author.avatar);
       noticeBtn.style.left = notice.location.x + 'px';
       noticeBtn.style.top = notice.location.y + 'px';
