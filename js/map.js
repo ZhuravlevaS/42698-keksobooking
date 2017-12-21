@@ -3,17 +3,17 @@
 (function () {
   var MAX_PIN = 5;
 
-  var MAIN_PIN_PARAMS = {
-    width: 66, // px
-    height: 66, // px
-    heightMark: 22 // px
+  var MainPinParams = {
+    WIDTH: 66, // px
+    HEIGHT: 66, // px
+    HEIGHT_MARK: 22 // px
   };
 
-  var LIMITS_COORDS = {
-    minY: 100 - MAIN_PIN_PARAMS.height / 2 - MAIN_PIN_PARAMS.heightMark,
-    maxY: 500 - MAIN_PIN_PARAMS.height / 2 - MAIN_PIN_PARAMS.heightMark,
-    minX: 0 + MAIN_PIN_PARAMS.width / 2,
-    maxX: 1200 - MAIN_PIN_PARAMS.width / 2
+  var LimitsCoords = {
+    MIN_Y: 100 - MainPinParams.HEIGHT / 2 - MainPinParams.HEIGHT_MARK,
+    MAX_Y: 500 - MainPinParams.HEIGHT / 2 - MainPinParams.HEIGHT_MARK,
+    MIN_X: 0 + MainPinParams.WIDTH / 2,
+    MAX_X: 1200 - MainPinParams.WIDTH / 2
   };
 
   var similarListButtons = document.querySelector('.map__pins');
@@ -33,7 +33,7 @@
 
   var drawFilteredPins = function () {
     cleanPins();
-    window.card.removeCard();
+    window.card.remove();
     var data = window.filterData(serverData);
 
     drawPin(data);
@@ -92,21 +92,21 @@
       var coordLeft = mainPin.offsetLeft - shift.x;
 
       var limits = {
-        minY: LIMITS_COORDS.minY,
-        maxY: LIMITS_COORDS.maxY,
-        minX: LIMITS_COORDS.minX,
-        maxX: LIMITS_COORDS.maxX,
+        minY: LimitsCoords.MIN_Y,
+        maxY: LimitsCoords.MAX_Y,
+        minX: LimitsCoords.MIN_X,
+        maxX: LimitsCoords.MAX_X,
       };
 
       if (coordTop < limits.minY) {
         coordTop = limits.minY;
-      } else
+      }
       if (coordTop > limits.maxY) {
         coordTop = limits.maxY;
-      } else
+      }
       if (coordLeft < limits.minX) {
         coordLeft = limits.minX;
-      } else
+      }
       if (coordLeft > limits.maxX) {
         coordLeft = limits.maxX;
       }

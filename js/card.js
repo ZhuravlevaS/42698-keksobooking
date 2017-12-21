@@ -65,11 +65,11 @@
 
   window.card = {
     render: function (item) {
-      window.card.removeCard();
+      window.card.remove();
       mapElement.insertBefore(render(item), mapFilter);
     },
 
-    removeCard: function () {
+    remove: function () {
       var cardElem = mapElement.querySelector('.map__card');
       if (cardElem) {
         mapElement.removeChild(cardElem);

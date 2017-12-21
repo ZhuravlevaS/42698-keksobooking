@@ -1,6 +1,13 @@
 'use strict';
 
 (function () {
+  var ERROR_STYLE = 'border: 1px solid #ff6547';
+  var TIME_VALUES = ['12:00', '13:00', '14:00'];
+  var APART_TYPES = ['bungalo', 'flat', 'house', 'palace'];
+  var PRICES = ['0', '1000', '5000', '10000'];
+  var ROOMS = ['1', '2', '3', '100'];
+  var GUESTS = ['1', '2', '3', '0'];
+
   var form = document.querySelector('.notice__form');
   var priceInput = form.querySelector('#price');
   var timeInSelect = form.querySelector('#timein');
@@ -9,14 +16,6 @@
   var roomNumberSelect = form.querySelector('#room_number');
   var capacitySelect = form.querySelector('#capacity');
   var adressInput = document.querySelector('#address');
-
-  var ERROR_STYLE = 'border: 1px solid #ff6547';
-  var TIME_VALUES = ['12:00', '13:00', '14:00'];
-  var APART_TYPES = ['bungalo', 'flat', 'house', 'palace'];
-  var PRICES = ['0', '1000', '5000', '10000'];
-  var ROOMS = ['1', '2', '3', '100'];
-  var GUESTS = ['1', '2', '3', '0'];
-
 
   var roomsActiveElem = {
     '1': ['1'],
@@ -72,13 +71,13 @@
       elem.disabled = !roomsActiveElem[value].includes(elem.value);
     });
   };
-  disableSelect(capacitySelect, capacitySelect.value);
 
   var syncValueWithDisabled = function (element, value) {
     element.value = value;
     disableSelect(element, value);
   };
 
+  disableSelect(capacitySelect, capacitySelect.value);
   window.synchronizeFields(timeInSelect, timeOutSelect, TIME_VALUES, TIME_VALUES, syncValue);
   window.synchronizeFields(timeOutSelect, timeInSelect, TIME_VALUES, TIME_VALUES, syncValue);
   window.synchronizeFields(typeOfApartSelect, priceInput, APART_TYPES, PRICES, syncValueWithMin);
