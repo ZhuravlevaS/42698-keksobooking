@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var ACTIVE_PIN = 5;
+  var MAX_PIN = 5;
 
   var MAIN_PIN_PARAMS = {
     width: 66, // px
@@ -18,100 +18,39 @@
 
   var similarListButtons = document.querySelector('.map__pins');
   var mainPin = document.querySelector('.map__pin--main');
-  var filterForm = document.querySelector('.map__filters');
+  var filterdForm = document.querySelector('.map__filters');
+  var serverData = null;
 
-  var PRICE_ELEMS = {
-    low: 10000,
-    high: 50000
-  };
 
-  var filter = {
-  };
+  var cleanPins = function () {
+    var mapPin = document.querySelector('.map__pins');
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 
-  var copyPins = function (arr) {
-    window.serverData = arr.slice();
-  };
-
-  var checkPrice = function (filterValue, data) {
-    switch (filterValue) {
-      case 'low':
-        return data < PRICE_ELEMS.low;
-      case 'middle':
-        return data < PRICE_ELEMS.high && data >= PRICE_ELEMS.low;
-      case 'high':
-        return data >= PRICE_ELEMS.high;
-      default:
-        return false;
+    for (var i = 0; i < pins.length; i++) {
+      mapPin.removeChild(pins[i]);
     }
   };
 
-  var checkFeatures = function (filterValue, data) {
-    return filterValue.every(function (feature) {
-      return data.indexOf(feature) > -1;
-    });
+  var drawFilteredPins = function () {
+    cleanPins();
+    window.card.removeCard();
+    var data = window.filter.filterData(serverData);
 
-  };
-
-
-  filterForm.addEventListener('change', function (evt) {
-    var name = evt.target.getAttribute('name');
-
-    if (evt.target.value === 'any') {
-      delete filter[name.slice(8)];
-    } else if (name !== 'features') {
-      var keyForData = name.slice(8);
-
-      filter[keyForData] = evt.target.value;
-    } else {
-      if (!filter.features) {
-        filter.features = [evt.target.value];
-      } else if (filter.features && filter.features.indexOf(evt.target.value) === -1) {
-        filter.features.push(evt.target.value);
-      } else {
-        filter.features.splice(filter.features.indexOf(evt.target.value), 1);
-
-        if (!filter.features.length) {
-          delete filter.features;
-        }
-      }
-    }
-
-    if (!Object.keys(filter)) {
-      window.utils.debounce(drawFilteredPins(window.serverData));
-      return;
-    }
-
-    var filteredData = window.serverData.filter(function (data) {
-      var currentHouse = data.offer;
-
-      var isFitsFilter = Object.keys(filter).every(function (keyName) {
-        if (keyName === 'price') {
-          return checkPrice(filter[keyName], currentHouse[keyName]);
-        } else if (keyName === 'features') {
-          return checkFeatures(filter[keyName], currentHouse[keyName]);
-        }
-        return currentHouse[keyName].toString() === filter[keyName];
-      });
-
-      return isFitsFilter;
-    });
-    window.utils.debounce(drawFilteredPins(filteredData));
-  });
-
-  var drawFilteredPins = function (data) {
-    window.pin.cleanPins();
     drawPin(data);
   };
 
+  filterdForm.addEventListener('change', function () {
+    window.utils.debounce(drawFilteredPins);
+  });
 
   var drawPin = function (pins) {
-    if (!window.serverData) {
-      copyPins(pins);
+    if (!serverData) {
+      serverData = pins;
     }
 
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < ACTIVE_PIN && i < pins.length; i++) {
+    for (var i = 0; i < pins.slice(0, MAX_PIN).length; i++) {
       var pin = window.pin.render(pins[i]);
       fragment.appendChild(pin);
     }

@@ -48,24 +48,6 @@
       };
 
       return coords;
-    },
-
-    cleanPins: function () {
-      var mapPin = document.querySelector('.map__pins');
-      var pins = document.querySelectorAll('.map__pin');
-
-      for (var i = 0; i < pins.length; i++) {
-        if (!pins[i].classList.contains('map__pin--main')) {
-          mapPin.removeChild(pins[i]);
-        }
-      }
-
-      // console.log(mapPin.childNodes);
-      // while (mapPin.hasChildNodes(pin)) {
-      //   if (!pin.classList.contains('map__pin--main')) {
-      //     mapPin.removeChild(pin);
-      //   }
-      // }
     }
   };
 })();

@@ -59,11 +59,15 @@
 
   window.card = {
     render: function (item) {
+      window.card.removeCard();
+      mapElement.insertBefore(render(item), mapFilter);
+    },
+
+    removeCard: function () {
       var card = mapElement.querySelector('.map__card');
       if (card) {
         mapElement.removeChild(card);
       }
-      mapElement.insertBefore(render(item), mapFilter);
-    },
+    }
   };
 })();
