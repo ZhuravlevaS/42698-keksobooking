@@ -18,7 +18,7 @@
     }
   };
 
-  var filterdForm = document.querySelector('.map__filters');
+  var filteredForm = document.querySelector('.map__filters');
 
   var filterByValue = function (data, name, value) {
     return data.filter(function (currentData) {
@@ -41,8 +41,8 @@
 
   window.filterData = function (arr) {
     var filteredArray = arr;
-    var selects = filterdForm.querySelectorAll('.map__filter');
-    var checkboxes = filterdForm.querySelectorAll('input:checked');
+    var selects = filteredForm.querySelectorAll('.map__filter');
+    var checkboxes = filteredForm.querySelectorAll('input:checked');
 
     selects = Array.from(selects).filter(function (select) {
       return select.value !== 'any';
