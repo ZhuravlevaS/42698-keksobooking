@@ -2,6 +2,10 @@
 
 (function () {
   var MAX_PIN = 5;
+  var MIN_Y = 100;
+  var MAX_Y = 500;
+  var MIN_X = 0;
+  var MAX_X = 1200;
 
   var MainPinParams = {
     WIDTH: 66, // px
@@ -10,16 +14,16 @@
   };
 
   var LimitsCoords = {
-    MIN_Y: 100 - MainPinParams.HEIGHT / 2 - MainPinParams.HEIGHT_MARK,
-    MAX_Y: 500 - MainPinParams.HEIGHT / 2 - MainPinParams.HEIGHT_MARK,
-    MIN_X: 0 + MainPinParams.WIDTH / 2,
-    MAX_X: 1200 - MainPinParams.WIDTH / 2
+    MIN_Y: MIN_Y - MainPinParams.HEIGHT / 2 - MainPinParams.HEIGHT_MARK,
+    MAX_Y: MAX_Y - MainPinParams.HEIGHT / 2 - MainPinParams.HEIGHT_MARK,
+    MIN_X: MIN_X + MainPinParams.WIDTH / 2,
+    MAX_X: MAX_X - MainPinParams.WIDTH / 2
   };
 
   var similarListButtons = document.querySelector('.map__pins');
   var mainPin = document.querySelector('.map__pin--main');
   var filterdForm = document.querySelector('.map__filters');
-  var serverData = null;
+  var originalNotes = null;
 
 
   var cleanPins = function () {
@@ -34,9 +38,9 @@
   var drawFilteredPins = function () {
     cleanPins();
     window.card.remove();
-    var data = window.filterData(serverData);
+    var filteredNotes = window.filterData(originalNotes);
 
-    drawPin(data);
+    drawPin(filteredNotes);
   };
 
   filterdForm.addEventListener('change', function () {
@@ -44,8 +48,8 @@
   });
 
   var drawPin = function (pins) {
-    if (!serverData) {
-      serverData = pins;
+    if (!originalNotes) {
+      originalNotes = pins;
     }
 
     var fragment = document.createDocumentFragment();
@@ -53,8 +57,8 @@
     var slicedPins = (pins.length > MAX_PIN) ? pins.slice(0, MAX_PIN) : pins;
 
     slicedPins.forEach(function (pin) {
-      var pinElem = window.pin.render(pin);
-      fragment.appendChild(pinElem);
+      var pinElement = window.pin.render(pin);
+      fragment.appendChild(pinElement);
     });
 
     similarListButtons.appendChild(fragment);
@@ -75,7 +79,7 @@
       y: evt.clientY
     };
 
-    var onMouseMove = function (moveEvt) {
+    var mouseMoveHandler = function (moveEvt) {
       moveEvt.preventDefault();
 
       var shift = {
@@ -118,15 +122,15 @@
     };
 
 
-    var onMouseUp = function (upEvt) {
+    var mouseUpHandler = function (upEvt) {
       upEvt.preventDefault();
 
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
+      document.removeEventListener('mousemove', mouseMoveHandler);
+      document.removeEventListener('mouseup', mouseUpHandler);
     };
 
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener('mousemove', mouseMoveHandler);
+    document.addEventListener('mouseup', mouseUpHandler);
   });
 
   mainPin.addEventListener('mouseup', pinMouseupHandler);

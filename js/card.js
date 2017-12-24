@@ -20,18 +20,19 @@
     parent.appendChild(li);
   };
 
-  var closeCardByKey = function (evt) {
+  var closeCardKeyHandler = function (evt) {
     if (evt.keyCode === ESC_CODE) {
-      var card = mapElement.querySelector('.map__card');
+      // var card = mapElement.querySelector('.map__card');
 
-      mapElement.removeChild(card);
+      // mapElement.removeChild(element);
+      window.card.remove();
       window.pin.deactivate();
-      document.removeEventListener('keydown', closeCardByKey);
+      document.removeEventListener('keydown', closeCardKeyHandler);
     }
   };
 
-  var closeCardHandler = function (parent) {
-    mapElement.removeChild(parent);
+  var closeCardHandler = function (element) {
+    mapElement.removeChild(element);
 
     window.pin.deactivate();
   };
@@ -58,7 +59,7 @@
       closeCardHandler(noticeElementCard);
     });
 
-    document.addEventListener('keydown', closeCardByKey);
+    document.addEventListener('keydown', closeCardKeyHandler);
 
     return noticeElementCard;
   };
@@ -70,9 +71,9 @@
     },
 
     remove: function () {
-      var cardElem = mapElement.querySelector('.map__card');
-      if (cardElem) {
-        mapElement.removeChild(cardElem);
+      var cardElement = mapElement.querySelector('.map__card');
+      if (cardElement) {
+        mapElement.removeChild(cardElement);
       }
     }
   };

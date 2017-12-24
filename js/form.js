@@ -17,7 +17,7 @@
   var capacitySelect = form.querySelector('#capacity');
   var adressInput = document.querySelector('#address');
 
-  var roomsActiveElem = {
+  var roomsActiveElement = {
     '1': ['1'],
     '2': ['1', '2'],
     '3': ['1', '2', '3'],
@@ -48,12 +48,12 @@
   });
 
   var formReset = function () {
-    var allRequired = form.querySelectorAll('input[required]');
+    var requiredInputs = form.querySelectorAll('input[required]');
 
     form.reset();
     priceInput.min = '0';
-    allRequired.forEach(function (elem) {
-      elem.style = '';
+    [].forEach.call(requiredInputs, function (element) {
+      element.style = '';
     });
   };
 
@@ -66,9 +66,9 @@
   };
 
   var disableSelect = function (element, value) {
-    var elementArr = element.querySelectorAll('option');
-    elementArr.forEach(function (elem) {
-      elem.disabled = !roomsActiveElem[value].includes(elem.value);
+    var options = element.querySelectorAll('option');
+    [].forEach.call(options, function (item) {
+      item.disabled = !roomsActiveElement[value].includes(item.value);
     });
   };
 

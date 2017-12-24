@@ -22,7 +22,7 @@
 
   var filterByValue = function (data, name, value) {
     return data.filter(function (currentData) {
-      return currentData.offer[name] === value;
+      return currentData.offer[name].toString() === value;
     });
   };
 
@@ -40,7 +40,7 @@
 
 
   window.filterData = function (arr) {
-    var filteredArray = arr;
+    var filteredObjects = arr;
     var selects = filteredForm.querySelectorAll('.map__filter');
     var checkboxes = filteredForm.querySelectorAll('input:checked');
 
@@ -48,16 +48,16 @@
       return select.value !== 'any';
     });
 
-    selects.forEach(function (select) {
+    [].forEach.call(selects, function (select) {
       var name = select.getAttribute('name').replace('housing-', '');
-      filteredArray = name === 'price' ?
-        filterByPrice(filteredArray, select.value) :
-        filterByValue(filteredArray, name, select.value);
+      filteredObjects = name === 'price' ?
+        filterByPrice(filteredObjects, select.value) :
+        filterByValue(filteredObjects, name, select.value);
     });
 
-    checkboxes.forEach(function (checkbox) {
-      filteredArray = filterByFeature(filteredArray, checkbox.value);
+    [].forEach.call(checkboxes, function (checkbox) {
+      filteredObjects = filterByFeature(filteredObjects, checkbox.value);
     });
-    return filteredArray;
+    return filteredObjects;
   };
 })();
