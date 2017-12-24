@@ -6,6 +6,7 @@
   var noticeCard = document.querySelector('template').content.querySelector('article.map__card');
   var mapElement = document.querySelector('.map');
   var mapFilter = mapElement.querySelector('.map__filters-container');
+  var activeCard = null;
 
   var typeParams = {
     flat: 'Квартира',
@@ -31,13 +32,12 @@
     }
   };
 
-  var closeCardHandler = function (element) {
-    mapElement.removeChild(element);
-
+  var closeCardHandler = function () {
+    window.card.remove();
     window.pin.deactivate();
   };
 
-  var render = function (card) {
+  var renderCard = function (card) {
     var noticeElementCard = noticeCard.cloneNode(true);
     var popupFeature = noticeElementCard.querySelector('.popup__features');
     var buttonClose = noticeElementCard.querySelector('.popup__close');
@@ -55,9 +55,7 @@
       renderFeature(featureItem, popupFeature);
     });
 
-    buttonClose.addEventListener('click', function () {
-      closeCardHandler(noticeElementCard);
-    });
+    buttonClose.addEventListener('click', closeCardHandler);
 
     document.addEventListener('keydown', closeCardKeyHandler);
 
@@ -67,13 +65,15 @@
   window.card = {
     render: function (item) {
       window.card.remove();
-      mapElement.insertBefore(render(item), mapFilter);
+
+      activeCard = renderCard(item);
+      mapElement.insertBefore(activeCard, mapFilter);
     },
 
     remove: function () {
-      var cardElement = mapElement.querySelector('.map__card');
-      if (cardElement) {
-        mapElement.removeChild(cardElement);
+      if (activeCard) {
+        mapElement.removeChild(activeCard);
+        activeCard = null;
       }
     }
   };
