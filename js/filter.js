@@ -40,7 +40,7 @@
 
 
   window.filterData = function (arr) {
-    var filteredObjects = arr;
+    var filteredObjects = arr.slice();
     var selects = filteredForm.querySelectorAll('.map__filter');
     var checkboxes = filteredForm.querySelectorAll('input:checked');
 

@@ -21,18 +21,15 @@
     parent.appendChild(li);
   };
 
-  var closeCardKeyHandler = function (evt) {
+  var cardKeydownHandler = function (evt) {
     if (evt.keyCode === ESC_CODE) {
-      // var card = mapElement.querySelector('.map__card');
-
-      // mapElement.removeChild(element);
       window.card.remove();
       window.pin.deactivate();
-      document.removeEventListener('keydown', closeCardKeyHandler);
+      document.removeEventListener('keydown', cardKeydownHandler);
     }
   };
 
-  var closeCardHandler = function () {
+  var cardClickHandler = function () {
     window.card.remove();
     window.pin.deactivate();
   };
@@ -55,9 +52,9 @@
       renderFeature(featureItem, popupFeature);
     });
 
-    buttonClose.addEventListener('click', closeCardHandler);
+    buttonClose.addEventListener('click', cardClickHandler);
 
-    document.addEventListener('keydown', closeCardKeyHandler);
+    document.addEventListener('keydown', cardKeydownHandler);
 
     return noticeElementCard;
   };

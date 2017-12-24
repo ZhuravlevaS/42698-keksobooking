@@ -2,43 +2,46 @@
 
 (function () {
   var SERVER_URL = 'https://1510.dump.academy/keksobooking';
-  var WAIT_TIME = 10000; // 10s
-  var RESPOND_SUCCESS = 200;
-  var RESPOND_ERROR_404 = 404;
+  var TIMEOUT = 10000; // 10s
 
-  var setup = function (onLoad, onError) {
+  var StatusesRequest = {
+    RESPOND_SUCCESS: 200,
+    RESPOND_ERROR_404: 404
+  };
+
+  var setup = function (successHandler, errorHandler) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === RESPOND_SUCCESS) {
-        onLoad(xhr.response);
-      } else if (xhr.status === RESPOND_ERROR_404) {
-        onError('Данные не найдены');
+      if (xhr.status === StatusesRequest.RESPOND_SUCCESS) {
+        successHandler(xhr.response);
+      } else if (xhr.status === StatusesRequest.RESPOND_ERROR_404) {
+        errorHandler('Данные не найдены');
       } else {
-        onError(xhr.response);
+        errorHandler(xhr.response);
       }
     });
     xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
+      errorHandler('Произошла ошибка соединения');
     });
     xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+      errorHandler('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    xhr.timeout = WAIT_TIME;
+    xhr.timeout = TIMEOUT;
     return xhr;
   };
 
   window.backend = {
-    save: function (data, onLoad, onError) {
-      var xhr = setup(onLoad, onError);
+    save: function (data, successHandler, errorHandler) {
+      var xhr = setup(successHandler, errorHandler);
 
       xhr.open('POST', SERVER_URL);
       xhr.send(data);
     },
-    load: function (onLoad, onError) {
-      var xhr = setup(onLoad, onError);
+    load: function (successHandler, errorHandler) {
+      var xhr = setup(successHandler, errorHandler);
 
       xhr.open('GET', SERVER_URL + '/data');
       xhr.send();
